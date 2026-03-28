@@ -1,0 +1,16 @@
+{
+  "dashboard": "仪表盘",
+  "docs": "文档目录",
+  "search": "搜索",
+  "browse_docs": "浏览所有文档",
+  "search_docs": "搜索文档内容",
+  "folder": "文件夹",
+  "document": "文档",
+  "doc_stats": "文档统计",
+  "dir_dist": "目录分布",
+  "doc_count": "文档数",
+  "loading": "加载中...",
+  "load_failed": "加载失败",
+  "not_found": "文档未找到",
+  "back": "返回"
+}

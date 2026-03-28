@@ -1,0 +1,16 @@
+{
+  "dashboard": "Dashboard",
+  "docs": "Documents",
+  "search": "Search",
+  "browse_docs": "Browse all documents",
+  "search_docs": "Search documents",
+  "folder": "Folder",
+  "document": "Document",
+  "doc_stats": "Document Stats",
+  "dir_dist": "Directory Distribution",
+  "doc_count": "Documents",
+  "loading": "Loading...",
+  "load_failed": "Failed to load",
+  "not_found": "Document not found",
+  "back": "Back"
+}
