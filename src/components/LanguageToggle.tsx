@@ -6,7 +6,7 @@ export default function LanguageToggle() {
   return (
     <button
       onClick={() => setLocale(locale === 'zh' ? 'en' : 'zh')}
-      className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-white"
+      className="h-10 px-3 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 transition-colors font-medium cursor-pointer"
       title={locale === 'zh' ? 'Switch to English' : '切换到中文'}
     >
       {locale === 'zh' ? 'EN' : '中'}

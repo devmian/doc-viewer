@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'wouter'
 import Highcharts from 'highcharts'
-import { useDocsTree } from '../hooks/useDocs'
+import { useDocsTree, useDocLineCounts } from '../hooks/useDocs'
 import { useI18n } from '../hooks/useI18n'
 import SunburstChart from '../components/SunburstChart'
 import type { DocNode } from '../hooks/useDocs'
@@ -38,9 +38,9 @@ export default function Dashboard() {
   const { t } = useI18n()
   const [selectedDir, setSelectedDir] = useState<string | null>(null)
   const chartRef = useRef<HTMLDivElement>(null)
+  const lineChartRef = useRef<HTMLDivElement>(null)
+  const lineCounts = useDocLineCounts()
 
-  const dirCount = tree.filter(n => n.type === 'directory').length
-  const fileCount = tree.filter(n => n.type === 'file').length
   const sunburstData = buildSunburstData(tree)
   const colors = ['#60a5fa', '#34d399', '#fbbf24', '#f472b6', '#a78bfa']
 
@@ -51,7 +51,7 @@ export default function Dashboard() {
     const countFiles = (nodes: DocNode[]) => {
       for (const node of nodes) {
         if (node.type === 'file') {
-          const dir = node.relativePath.split('/')[0] || '根目录'
+          const dir = node.relativePath.split('/')[0] || 'root'
           dirStats[dir] = (dirStats[dir] || 0) + 1
         }
         if (node.children) countFiles(node.children)
@@ -59,18 +59,41 @@ export default function Dashboard() {
     }
     countFiles(tree)
 
-    const data = Object.entries(dirStats)
-      .map(([name, count]) => ({ name, y: count }))
-      .sort((a, b) => b.y - a.y)
+    const data = Object.entries(dirStats).map(([name, value]) => ({ name, value }))
 
+    const isDark = document.documentElement.classList.contains('dark')
+    const labelColor = isDark ? '#e5e7eb' : '#374151'
+    
     Highcharts.chart(chartRef.current, {
-      chart: { type: 'pie', backgroundColor: 'transparent', height: 180 },
+      chart: { type: 'bar', backgroundColor: 'transparent', height: 250 },
       title: { text: undefined },
-      plotOptions: { pie: { innerSize: '40%', dataLabels: { enabled: false } } },
-      series: [{ type: 'pie', name: '文档数', data: data.map((d, i) => ({ ...d, color: colors[i % colors.length] })) }],
+      xAxis: { categories: data.map(d => d.name), labels: { style: { fontSize: '12px', color: labelColor } }, tickWidth: 0, lineColor: labelColor, tickColor: labelColor },
+      yAxis: { title: { text: undefined }, labels: { enabled: false }, gridLineWidth: 0 },
+      legend: { enabled: false },
+      plotOptions: { bar: { borderWidth: 0, borderRadius: 4 } },
+      series: [{ type: 'bar', name: t('doc_count'), data: data.map((d, i) => ({ name: d.name, y: d.value, color: colors[i % colors.length] })) }],
       credits: { enabled: false }
     })
-  }, [loading, tree.length])
+  }, [loading, tree.length, t])
+
+  useEffect(() => {
+    if (!lineChartRef.current || lineCounts.length === 0) return
+
+    const topDocs = lineCounts.slice(0, 10)
+    const isDark = document.documentElement.classList.contains('dark')
+    const labelColor = isDark ? '#e5e7eb' : '#374151'
+
+    Highcharts.chart(lineChartRef.current, {
+      chart: { type: 'column', backgroundColor: 'transparent', height: 250 },
+      title: { text: undefined },
+      xAxis: { categories: topDocs.map(d => d.name), labels: { style: { fontSize: '9px', color: labelColor, whiteSpace: 'nowrap', textOverflow: 'ellipsis', maxWidth: '80px' } }, tickWidth: 0, tickColor: 'transparent' },
+      yAxis: { title: { text: undefined }, labels: { style: { fontSize: '10px', color: labelColor } } },
+      legend: { enabled: false },
+      plotOptions: { column: { borderWidth: 0, borderRadius: 4 } },
+      series: [{ type: 'column', name: '行数', data: topDocs.map((d, i) => ({ name: d.name, y: d.lines, color: colors[i % colors.length] })) }],
+      credits: { enabled: false }
+    })
+  }, [lineCounts, t])
 
   const handleSunburstClick = (node: { data: { name: string }; depth: number }) => {
     if (node.depth === 1) setSelectedDir(node.data.name)
@@ -91,10 +114,8 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">{t('dashboard')}</h1>
-      
-      <div className="grid gap-6 md:grid-cols-2 mb-8">
+    <div className="max-w-6xl mx-auto p-6 space-y-8">
+      <div className="grid gap-6 md:grid-cols-2">
         {quickLinks.map(item => (
           <Link key={item.path} href={item.path} className="block p-6 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-blue-500 hover:shadow-lg transition-all bg-white dark:bg-gray-800">
             <div className="text-4xl mb-4">{item.icon}</div>
@@ -108,16 +129,6 @@ export default function Dashboard() {
         <div className="grid gap-6 md:grid-cols-2">
           <div className="p-6 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('doc_stats')}</h3>
-            <div className="flex items-center justify-around mb-4">
-              <div className="text-center">
-                <div className="text-4xl font-bold text-blue-500">{dirCount}</div>
-                <div className="text-sm text-gray-500">{t('folder')}</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold text-green-500">{fileCount}</div>
-                <div className="text-sm text-gray-500">{t('document')}</div>
-              </div>
-            </div>
             <div ref={chartRef}></div>
           </div>
 
@@ -137,10 +148,19 @@ export default function Dashboard() {
             ) : (
               <>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('dir_dist')}</h3>
-                <SunburstChart key={sunburstData.children?.length} data={sunburstData} width={280} height={280} onNodeClick={handleSunburstClick} />
+                <div className="flex justify-center">
+                  <SunburstChart key={sunburstData.children?.length} data={sunburstData} width={280} height={280} onNodeClick={handleSunburstClick} />
+                </div>
               </>
             )}
           </div>
+        </div>
+      )}
+
+      {lineCounts.length > 0 && (
+        <div className="p-6 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">文档行数 TOP 10</h3>
+          <div ref={lineChartRef}></div>
         </div>
       )}
     </div>

@@ -1,17 +1,20 @@
 import { Link } from 'wouter'
+import { useI18n } from '../hooks/useI18n'
 
 interface BreadcrumbProps {
   path: string
 }
 
 export default function Breadcrumb({ path }: BreadcrumbProps) {
+  const { t } = useI18n()
   const parts = path.split('/').filter(Boolean)
   
   const breadcrumbs = [
-    { name: '首页', href: '/' },
+    { name: t('dashboard'), href: '/' },
+    { name: t('docs'), href: '/docs' },
     ...parts.map((part, index) => ({
       name: part.replace('.md', ''),
-      href: '/' + parts.slice(0, index + 1).join('/').replace('.md', '')
+      href: '/' + parts.slice(0, index + 1).join('/')
     }))
   ]
 

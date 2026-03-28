@@ -35,15 +35,18 @@ function addToRecent(path: string, name: string) {
 }
 
 function ItemCard({ item, title }: { item: DocNode; title?: string | null }) {
+  const isDir = item.type === 'directory'
   return (
     <Link
       href={`/${item.relativePath.replace('.md', '')}`}
       className="block p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-blue-500 hover:shadow-md transition-all"
     >
       <div className="flex items-start">
-        <span className="text-2xl mr-3">{item.type === 'directory' ? '📁' : '📄'}</span>
+        <span className="text-2xl mr-3">{isDir ? '📁' : '📄'}</span>
         <div>
-          <div className="font-medium text-gray-900 dark:text-white">{item.name}</div>
+          <div className={`font-medium ${isDir ? 'text-blue-600 dark:text-blue-400' : 'text-green-600 dark:text-green-400'}`}>
+            {item.name}
+          </div>
           {title && <div className="text-sm text-gray-500 mt-1 line-clamp-2">{title}</div>}
         </div>
       </div>
@@ -74,7 +77,7 @@ export default function DocPage() {
   if (!path && tree.length > 0) {
     return (
       <div className="max-w-4xl mx-auto p-4">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">{t('docs')}</h1>
+        <Breadcrumb path="/docs" />
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {sortItems(tree).map(item => <ItemCard key={item.relativePath} item={item} />)}
         </div>
@@ -90,7 +93,6 @@ export default function DocPage() {
     return (
       <div className="max-w-4xl mx-auto p-4">
         <Breadcrumb path={path} />
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">{node.name}</h1>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {sortItems(node.children).map(item => (
             <ItemCard key={item.relativePath} item={item} title={item.type === 'file' ? titles[item.relativePath] : null} />
@@ -103,7 +105,7 @@ export default function DocPage() {
   // 文档
   return (
     <div className="max-w-4xl mx-auto p-4">
-      <Breadcrumb path={mdPath} />
+      <Breadcrumb path={path} />
       {loading && <div className="text-gray-500 py-8 text-center">{t('loading')}</div>}
       {error && <div className="text-red-500 py-8 text-center">{t('load_failed')}</div>}
       {!loading && !content && <div className="text-gray-500 py-8 text-center">{t('not_found')}</div>}

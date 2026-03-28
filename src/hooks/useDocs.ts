@@ -119,3 +119,16 @@ export function useDocTitles() {
 
   return titles
 }
+
+export function useDocLineCounts() {
+  const [lineCounts, setLineCounts] = useState<{ name: string; lines: number }[]>([])
+
+  useEffect(() => {
+    fetch('/api/docs?action=linecounts')
+      .then(res => res.json())
+      .then(setLineCounts)
+      .catch(console.error)
+  }, [])
+
+  return lineCounts
+}

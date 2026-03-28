@@ -10,14 +10,17 @@ export default function ThemeToggle() {
   }, [])
 
   if (!mounted) {
-    return <button className="p-2">🌙</button>
+    return <button className="h-10 px-3 rounded-lg bg-gray-100 dark:bg-gray-700">🌙</button>
   }
 
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-lg"
-      style={{ background: theme === 'dark' ? '#374151' : '#f3f4f6' }}
+      className={`h-10 px-3 rounded-lg transition-colors text-lg cursor-pointer ${
+        theme === 'dark' 
+          ? 'bg-gray-700 hover:bg-gray-600 text-yellow-400' 
+          : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+      }`}
     >
       {theme === 'light' ? '🌙' : '☀️'}
     </button>

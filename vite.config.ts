@@ -224,6 +224,17 @@ function docsPlugin(): Plugin {
             res.end(JSON.stringify(titles))
             return
           }
+
+          if (action === 'linecounts') {
+            const docs = getAllDocs()
+            const lineCounts = docs.map(d => ({
+              name: d.path.split('/').pop()?.replace('.md', '') || d.path,
+              lines: d.content.split('\n').length
+            })).sort((a, b) => b.lines - a.lines)
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify(lineCounts))
+            return
+          }
           
           res.statusCode = 400
           res.end(JSON.stringify({ error: 'Unknown action' }))

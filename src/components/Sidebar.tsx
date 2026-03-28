@@ -16,8 +16,9 @@ function TreeItem({ node, depth }: TreeItemProps) {
   const [expanded, setExpanded] = useState(depth < 2)
   
   const isActive = node.type === 'file' && `/${node.relativePath.replace('.md', '')}` === location
+  const isDir = node.type === 'directory'
   
-  if (node.type === 'directory') {
+  if (isDir) {
     return (
       <div>
         <button
@@ -28,7 +29,7 @@ function TreeItem({ node, depth }: TreeItemProps) {
           <span className="mr-1 text-gray-500 dark:text-gray-400 text-xs">
             {expanded ? '▼' : '▶'}
           </span>
-          <span className="font-medium text-gray-900 dark:text-white">{node.name}</span>
+          <span className="font-medium text-blue-600 dark:text-blue-400">{node.name}</span>
         </button>
         {expanded && node.children && (
           <div>
@@ -47,12 +48,12 @@ function TreeItem({ node, depth }: TreeItemProps) {
       className={`flex items-center w-full px-2 py-1.5 text-sm text-left rounded transition-colors ${
         isActive 
           ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300' 
-          : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300'
+          : 'hover:bg-gray-100 dark:hover:bg-gray-800'
       }`}
       style={{ paddingLeft: `${depth * 12 + 24}px` }}
     >
-      <span className="mr-2 text-gray-400">📄</span>
-      <span className="text-gray-900 dark:text-white">{node.name}</span>
+      <span className="mr-2">📄</span>
+      <span className="text-green-600 dark:text-green-400">{node.name}</span>
     </Link>
   )
 }

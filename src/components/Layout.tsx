@@ -1,19 +1,17 @@
 import { useState, type ReactNode } from 'react'
 import { Link } from 'wouter'
 import Sidebar from './Sidebar'
-import ThemeToggle from './ThemeToggle'
-import LanguageToggle from './LanguageToggle'
+import HeaderButtons from './HeaderButtons'
 import Search from './Search'
-import { useI18n } from '../hooks/useI18n'
 import type { DocNode } from '../hooks/useDocs'
 
 interface LayoutProps {
   children: ReactNode
   tree: DocNode[]
+  title?: string
 }
 
-export default function Layout({ children, tree }: LayoutProps) {
-  const { t } = useI18n()
+export default function Layout({ children, tree, title }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
 
@@ -45,19 +43,22 @@ export default function Layout({ children, tree }: LayoutProps) {
       <div className="xl:pl-64">
         {/* Header */}
         <header className="sticky top-0 z-20 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between px-4 py-3">
+          <div className="grid grid-cols-3 items-center px-4 py-3">
             <div className="flex items-center">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="mr-4 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 xl:hidden"
+                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 xl:hidden"
               >
                 <span className="text-xl text-gray-900 dark:text-white">☰</span>
               </button>
-              <Link href="/" className="text-xl font-bold text-gray-900 dark:text-white">
-                📚 {t('docs')}
+              <Link href="/" className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-xl ml-2">
+                🏠
               </Link>
             </div>
-            <div className="flex items-center space-x-2">
+            {title && (
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white text-center">{title}</h1>
+            )}
+            <div className="flex items-center justify-end space-x-2">
               <div className="w-64 hidden md:block">
                 <Search />
               </div>
@@ -67,8 +68,7 @@ export default function Layout({ children, tree }: LayoutProps) {
               >
                 🔍
               </button>
-              <ThemeToggle />
-              <LanguageToggle />
+              <HeaderButtons />
             </div>
           </div>
           
