@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'wouter'
+import { ChevronDown, ChevronRight, FileText, Folder, LayoutGrid } from 'lucide-react'
 import type { DocNode } from '../hooks/useDocs'
 
 interface SidebarProps {
@@ -15,24 +16,24 @@ function TreeItem({ node, depth }: TreeItemProps) {
   const [location] = useLocation()
   const [expanded, setExpanded] = useState(depth < 2)
   
-  const isActive = node.type === 'file' && `/${node.relativePath.replace('.md', '')}` === location
+  const isActive = node.type === 'file' && `/${node.relativePath.replace(/\.md$/, '')}` === location
   const isDir = node.type === 'directory'
   
   if (isDir) {
     return (
-      <div>
+      <div className="mb-px">
         <button
           onClick={() => setExpanded(!expanded)}
-          className="flex items-center w-full px-2 py-1.5 text-sm text-left hover:bg-gray-100 dark:hover:bg-gray-800 rounded transition-colors"
-          style={{ paddingLeft: `${depth * 12 + 8}px` }}
+          className="flex items-center w-full px-4 py-2 text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--brand-light)] hover:text-[var(--brand-primary)] rounded-xl transition-all duration-200 group"
         >
-          <span className="mr-1 text-gray-500 dark:text-gray-400 text-xs">
-            {expanded ? '▼' : '▶'}
+          <span className="mr-2 text-[var(--text-secondary)] opacity-40 group-hover:opacity-100">
+            {expanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
           </span>
-          <span className="font-medium text-blue-600 dark:text-blue-400">{node.name}</span>
+          <Folder size={16} className="mr-2 text-[var(--brand-primary)] opacity-70 group-hover:opacity-100" />
+          <span className="truncate">{node.name}</span>
         </button>
         {expanded && node.children && (
-          <div>
+          <div className="ml-5 border-l border-[var(--border-primary)] pl-2 mt-1 space-y-1">
             {node.children.map(child => (
               <TreeItem key={child.relativePath} node={child} depth={depth + 1} />
             ))}
@@ -44,37 +45,52 @@ function TreeItem({ node, depth }: TreeItemProps) {
   
   return (
     <Link
-      href={`/${node.relativePath.replace('.md', '')}`}
-      className={`flex items-center w-full px-2 py-1.5 text-sm text-left rounded transition-colors ${
+      href={`/${node.relativePath.replace(/\.md$/, '')}`}
+      className={`relative flex items-center w-full px-4 py-2 text-sm rounded-xl transition-all duration-200 group ${
         isActive 
-          ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300' 
-          : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+          ? 'bg-[var(--brand-light)] text-[var(--brand-primary)] font-semibold shadow-sm' 
+          : 'text-[var(--text-secondary)] hover:bg-[var(--brand-light)] hover:text-[var(--brand-primary)]'
       }`}
-      style={{ paddingLeft: `${depth * 12 + 24}px` }}
     >
-      <span className="mr-2">📄</span>
-      <span className="text-green-600 dark:text-green-400">{node.name}</span>
+      {isActive && (
+        <span className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-[var(--brand-primary)] rounded-r-md" />
+      )}
+      <FileText size={16} className={`mr-2 flex-shrink-0 ${isActive ? 'text-[var(--brand-primary)]' : 'text-[var(--text-secondary)] opacity-50 group-hover:opacity-100'}`} />
+      <span className="truncate">{node.name}</span>
     </Link>
   )
 }
 
 export default function Sidebar({ tree }: SidebarProps) {
   return (
-    <aside className="w-64 h-screen overflow-y-auto border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 flex-shrink-0">
-      <div className="p-4">
-        <Link href="/" className="block text-xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-          📚 文档
+    <div className="flex flex-col h-full bg-[var(--bg-secondary)] py-6">
+      <div className="px-6 mb-8">
+        <Link href="/" className="flex items-center space-x-2 text-xl font-bold tracking-tight text-[var(--text-primary)] hover:text-[var(--brand-primary)] transition-colors group">
+          <div className="p-2 bg-[var(--brand-primary)] text-white rounded-xl group-hover:shadow-lg group-hover:scale-105 transition-all duration-200">
+            <LayoutGrid size={20} />
+          </div>
+          <span>LogicDoc</span>
         </Link>
       </div>
-      <nav className="px-2 pb-4">
+      
+      <nav className="flex-1 px-4 space-y-1 overflow-y-auto custom-scrollbar">
         {tree.length === 0 ? (
-          <p className="px-2 py-4 text-sm text-gray-500">暂无文档</p>
+          <p className="px-4 py-8 text-sm text-[var(--text-secondary)] text-center italic opacity-60">
+            暂无可用文档
+          </p>
         ) : (
           tree.map(node => (
             <TreeItem key={node.relativePath} node={node} depth={0} />
           ))
         )}
       </nav>
-    </aside>
+      
+      <div className="px-6 pt-4 border-t border-[var(--border-primary)] mt-auto">
+        <div className="flex items-center justify-between text-xs text-[var(--text-secondary)] opacity-60">
+          <span>v1.2.0</span>
+          <span>© 2024 Engine</span>
+        </div>
+      </div>
+    </div>
   )
 }

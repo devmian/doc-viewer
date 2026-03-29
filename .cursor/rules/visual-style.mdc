@@ -1,0 +1,34 @@
+---
+description: Fundamental visual principles and design tokens for the Doc-Viewer project.
+globs: ["src/**/*.tsx", "src/**/*.css", "index.html"]
+---
+
+# Exaggerated Minimalism Design System
+
+The application follows a **"Exaggerated Minimalism"** design philosophy, prioritizing high contrast, broad spacing, and premium visual elements.
+
+## 1. Visual Tokens (Slate/Blue Palette)
+
+| Token | Variable | Light Mode | Dark Mode |
+|-------|----------|------------|-----------|
+| Background Primary | `--bg-primary` | `#f8fafc` | `#020617` |
+| Background Secondary | `--bg-secondary` | `#ffffff` | `#0f172a` |
+| Text Primary | `--text-primary` | `#0f172a` | `#f8fafc` |
+| Text Secondary | `--text-secondary` | `#475569` | `#94a3b8` |
+| Border | `--border-primary` | `#e2e8f0` | `#1e293b` |
+| Brand | `--brand-primary` | `#2563eb` | `#3b82f6` |
+
+## 2. Typography
+- **Font Family**: `Plus Jakarta Sans` (Imported via Google Fonts).
+- **Line Height**: 1.6 - 1.75 for prose.
+- **Emphasis**: Use `font-extrabold` and `tracking-tight` for titles and major headers.
+
+## 3. Component Patterns
+- **Cards**: `rounded-2xl` or `rounded-3xl`. Use `border-[var(--border-primary)]` and `bg-[var(--bg-secondary)]`.
+- **Glassmorphism**: Headers must use `.glass-header` (`backdrop-filter: blur(8px)`).
+- **Icons**: Use `lucide-react` exclusively. Line width should be around `2.5` for emphasis. No emojis allowed in the core UI.
+
+## 4. Layout
+- **Containers**: The main layout is broad (`max-w-none` or `w-full`).
+- **Prose**: Markdown content must be constrained to `max-w-800px` for optimal readability.
+- **Grids**: Use `grid gap-6` or `gap-8` for spacing between data cards.

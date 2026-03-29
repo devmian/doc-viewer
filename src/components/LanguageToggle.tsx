@@ -1,3 +1,4 @@
+import { Languages } from 'lucide-react'
 import { useI18n } from '../hooks/useI18n'
 
 export default function LanguageToggle() {
@@ -6,10 +7,11 @@ export default function LanguageToggle() {
   return (
     <button
       onClick={() => setLocale(locale === 'zh' ? 'en' : 'zh')}
-      className="h-10 px-3 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200 transition-colors font-medium cursor-pointer"
+      className="flex items-center space-x-2 h-10 px-4 rounded-xl bg-[var(--bg-primary)] border border-[var(--border-primary)] text-[var(--text-secondary)] hover:bg-[var(--brand-light)] hover:text-[var(--brand-primary)] hover:border-[var(--brand-primary)] transition-all duration-200 font-medium group active:scale-95"
       title={locale === 'zh' ? 'Switch to English' : '切换到中文'}
     >
-      {locale === 'zh' ? 'EN' : '中'}
+      <Languages size={16} className="group-hover:rotate-12 transition-transform" />
+      <span className="text-sm tracking-wide">{locale === 'zh' ? 'EN' : '中文'}</span>
     </button>
   )
 }

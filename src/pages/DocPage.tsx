@@ -1,5 +1,6 @@
 import { useLocation } from 'wouter'
 import { Link } from 'wouter'
+import { Folder, FileText, ChevronRight, Loader2, ArrowLeft } from 'lucide-react'
 import { useDocContent, useDocsTree, useDocTitles } from '../hooks/useDocs'
 import { useI18n } from '../hooks/useI18n'
 import type { DocNode } from '../hooks/useDocs'
@@ -39,15 +40,28 @@ function ItemCard({ item, title }: { item: DocNode; title?: string | null }) {
   return (
     <Link
       href={`/${item.relativePath.replace('.md', '')}`}
-      className="block p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-blue-500 hover:shadow-md transition-all"
+      className="group relative flex items-start p-5 border border-[var(--border-primary)] rounded-2xl bg-[var(--bg-secondary)] hover:border-[var(--brand-primary)] hover:shadow-xl transition-all duration-300 overflow-hidden"
     >
-      <div className="flex items-start">
-        <span className="text-2xl mr-3">{isDir ? '📁' : '📄'}</span>
-        <div>
-          <div className={`font-medium ${isDir ? 'text-blue-600 dark:text-blue-400' : 'text-green-600 dark:text-green-400'}`}>
+      <div className={`absolute top-0 right-0 w-24 h-24 ${isDir ? 'bg-blue-500' : 'bg-emerald-500'} opacity-[0.03] -translate-y-8 translate-x-8 rounded-full group-hover:scale-150 transition-transform duration-500`} />
+      
+      <div className={`shrink-0 p-3 rounded-xl ${isDir ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/30' : 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30'} group-hover:scale-110 transition-transform`}>
+        {isDir ? <Folder size={24} strokeWidth={2.5} /> : <FileText size={24} strokeWidth={2.5} />}
+      </div>
+      
+      <div className="ml-4 flex-1 min-w-0">
+        <div className="flex items-center justify-between">
+          <div className={`font-bold text-base truncate ${isDir ? 'text-[var(--text-primary)] group-hover:text-blue-600' : 'text-[var(--text-primary)] group-hover:text-emerald-600'} transition-colors`}>
             {item.name}
           </div>
-          {title && <div className="text-sm text-gray-500 mt-1 line-clamp-2">{title}</div>}
+          <ChevronRight size={16} className="text-[var(--text-secondary)] opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all shrink-0" />
+        </div>
+        {title && (
+          <div className="text-sm text-[var(--text-secondary)] mt-1.5 line-clamp-2 opacity-80 leading-relaxed font-medium">
+            {title}
+          </div>
+        )}
+        <div className="mt-4 flex items-center text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)] opacity-40 group-hover:opacity-100 transition-opacity">
+          <span>{isDir ? 'Directory' : 'Document'}</span>
         </div>
       </div>
     </Link>
@@ -73,50 +87,90 @@ export default function DocPage() {
     }
   }, [path, isDir])
 
-  // 根目录
-  if (!path && tree.length > 0) {
-    return (
-      <div className="max-w-4xl mx-auto p-4">
-        <Breadcrumb path="/docs" />
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {sortItems(tree).map(item => <ItemCard key={item.relativePath} item={item} />)}
+  const renderContent = () => {
+    // Root Directory
+    if (!path && tree.length > 0) {
+      return (
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <Breadcrumb path="/docs" />
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {sortItems(tree).map(item => <ItemCard key={item.relativePath} item={item} />)}
+          </div>
         </div>
-      </div>
-    )
-  }
+      )
+    }
 
-  // 空路径
-  if (!path) return null
+    // Directory list
+    if (isDir && node?.children) {
+      return (
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="flex items-center justify-between mb-8">
+            <Breadcrumb path={path} />
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {sortItems(node.children).map(item => (
+              <ItemCard key={item.relativePath} item={item} title={item.type === 'file' ? titles[item.relativePath] : null} />
+            ))}
+          </div>
+        </div>
+      )
+    }
 
-  // 目录
-  if (isDir && node?.children) {
+    // Single Document
     return (
-      <div className="max-w-4xl mx-auto p-4">
+      <div className="max-w-screen-xl mx-auto">
         <Breadcrumb path={path} />
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {sortItems(node.children).map(item => (
-            <ItemCard key={item.relativePath} item={item} title={item.type === 'file' ? titles[item.relativePath] : null} />
-          ))}
-        </div>
+        
+        {loading && (
+          <div className="py-20 flex flex-col items-center justify-center space-y-4">
+            <Loader2 size={40} className="animate-spin text-[var(--brand-primary)] opacity-40" />
+            <p className="text-sm font-bold tracking-widest uppercase text-[var(--text-secondary)] opacity-50 px-4 py-1.5 bg-[var(--brand-light)] rounded-full">
+              {t('loading')}
+            </p>
+          </div>
+        )}
+        
+        {error && (
+          <div className="py-20 text-center">
+            <div className="inline-flex p-4 bg-red-50 dark:bg-red-950/30 text-red-500 rounded-full mb-4">
+              <span className="text-3xl font-bold">!</span>
+            </div>
+            <p className="text-lg font-bold text-[var(--text-primary)]">{t('load_failed')}</p>
+          </div>
+        )}
+        
+        {!loading && !content && !isDir && (
+          <div className="py-20 text-center">
+            <p className="text-lg font-bold text-[var(--text-secondary)]">{t('not_found')}</p>
+            <Link href="/" className="mt-4 inline-flex items-center text-sm font-bold text-[var(--brand-primary)] hover:underline">
+              <ArrowLeft size={16} className="mr-2" /> {t('back_to_dashboard')}
+            </Link>
+          </div>
+        )}
+        
+        {content && (
+          <article className="animate-in fade-in duration-1000">
+            {content.match(/^#\s+(.+)$/m)?.[1] && (
+              <header className="mb-8 pb-8 border-b border-[var(--border-primary)]/50">
+                <h1 className="text-4xl sm:text-5xl font-extrabold text-[var(--text-primary)] tracking-tight leading-tight">
+                  {content.match(/^#\s+(.+)$/m)?.[1]}
+                </h1>
+                <div className="mt-4 flex items-center text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)] opacity-50">
+                  <FileText size={14} className="mr-2" />
+                  <span>Documentation Page</span>
+                </div>
+              </header>
+            )}
+            <MarkdownViewer content={content} skipFirstTitle />
+          </article>
+        )}
       </div>
     )
   }
 
-  // 文档
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <Breadcrumb path={path} />
-      {loading && <div className="text-gray-500 py-8 text-center">{t('loading')}</div>}
-      {error && <div className="text-red-500 py-8 text-center">{t('load_failed')}</div>}
-      {!loading && !content && <div className="text-gray-500 py-8 text-center">{t('not_found')}</div>}
-      {content && (
-        <>
-          {content.match(/^#\s+(.+)$/m)?.[1] && (
-            <h1 className="doc-page-title">{content.match(/^#\s+(.+)$/m)?.[1]}</h1>
-          )}
-          <MarkdownViewer content={content} skipFirstTitle />
-        </>
-      )}
+    <div className="w-full pb-20">
+      {renderContent()}
     </div>
   )
 }

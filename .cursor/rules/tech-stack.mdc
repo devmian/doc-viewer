@@ -1,0 +1,31 @@
+---
+description: Technical architecture, documentation, and coding standards for the Doc-Viewer project.
+globs: ["src/**/*.tsx", "src/**/*.ts", "vite.config.ts", "package.json"]
+---
+
+# Technical Architecture & Code Style
+
+The project is a high-performance, modern React documentation viewer with local-first features.
+
+## 1. Tech Stack
+- **Framework**: `React 19`
+- **Build Tool**: `Vite`
+- **Styling**: `Tailwind CSS 4` + `Vanilla CSS` for tokens.
+- **Routing**: `wouter` (Simple, lightweight).
+- **Icons**: `lucide-react` (Vector icons).
+- **Markown**: `react-markdown` + `highcharts` (Data visualization).
+
+## 2. Coding Patterns
+- **Functional Components**: Use Arrow functions or `function` keyword consistently. Use standard React hooks (`useState`, `useEffect`, `useRef`).
+- **Hooks**: Data fetching and theme/i18n logic are abstracted into custom hooks (`useDocs`, `useTheme`, `useI18n`).
+- **Routing**: Use `Link` from `wouter` for navigation. Path structure is `/` (Overview), `/docs` (Browser), `/search` (Search), and `/[path]` (Document).
+
+## 3. Component Structure
+- **Layout**: The `Layout` component wraps the entire app, providing a sticky glassmorphism header and a sidebar.
+- **Sidebar**: The sidebar is a tree-view of all documentation, supporting nested folders and active state highlighting (`sidebar-item-active`).
+- **Markdown**: The `MarkdownViewer` handles content rendering, syntax highlighting, and copy-to-clipboard functionality.
+
+## 4. Documentation Handling
+- Documents are fetched as raw `.md` files.
+- The `useDocs` hook provides a tree-like structure of the `docs` directory.
+- Breadcrumbs are auto-generated from the current path.

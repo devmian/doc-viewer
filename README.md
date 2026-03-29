@@ -1,73 +1,43 @@
-# React + TypeScript + Vite
+# Doc-Viewer: Modern Documentation Explorer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A premium, localized documentation viewer built with React 19, Vite, and Tailwind CSS 4. This project features an "Exaggerated Minimalism" design system with deep support for hierarchical documentation browsing and data visualization.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🛠️ Development & Design Context
 
-## React Compiler
+This project is optimized for both human developers and AI coding assistants. To ensure stylistic and technical consistency, please refer to:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **AI Context**: [docs/AI_CONTEXT.md](docs/AI_CONTEXT.md) - Standard technical and design rules.
+- **Visual Style**: [.cursor/rules/visual-style.mdc](.cursor/rules/visual-style.mdc) - Visual tokens and iconography rules.
+- **Tech Stack**: [.cursor/rules/tech-stack.mdc](.cursor/rules/tech-stack.mdc) - Coding standards and architecture.
 
-## Expanding the ESLint configuration
+### Key Features
+- **Modern UI**: Full-width layouts, Plus Jakarta Sans typography, and Glassmorphism headers.
+- **Vector Icons**: Exclusively powered by `lucide-react`.
+- **Data Insights**: Documentation distribution (Sunburst) and line count statistics (Highcharts).
+- **Premium Reading**: Optimized prose layouts with syntax highlighting and code-copying.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 Getting Started
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+1. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+2. **Run development server**
+   ```bash
+   npm run dev
+   ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+3. **Build for production**
+   ```bash
+   npm run build
+   ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 📂 Data Structure
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Place your Markdown files in the `docs` directory. The system automatically scans and generates a hierarchical navigation tree based on the folder structure.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+© 2026 Doc-Viewer Modernization.
