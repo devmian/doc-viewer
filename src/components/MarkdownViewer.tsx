@@ -5,6 +5,10 @@ import { Copy, Check } from 'lucide-react'
 import { useState } from 'react'
 import Mermaid from './Mermaid'
 
+function slugify(text: string): string {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+}
+
 interface MarkdownViewerProps {
   content: string
   skipFirstTitle?: boolean
@@ -60,7 +64,22 @@ export default function MarkdownViewer({ content, skipFirstTitle }: MarkdownView
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}
         components={{
-          code: CodeBlock
+          code: CodeBlock,
+          h1: ({ children }) => {
+            const text = String(children)
+            const id = slugify(text)
+            return <h1 id={id} className="scroll-mt-20">{children}</h1>
+          },
+          h2: ({ children }) => {
+            const text = String(children)
+            const id = slugify(text)
+            return <h2 id={id} className="scroll-mt-20">{children}</h2>
+          },
+          h3: ({ children }) => {
+            const text = String(children)
+            const id = slugify(text)
+            return <h3 id={id} className="scroll-mt-20">{children}</h3>
+          }
         }}
       >
         {processedContent}

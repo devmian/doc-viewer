@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'wouter'
 import Highcharts from 'highcharts'
-import { Book, Search as SearchIcon, ChevronRight, BarChart3, PieChart } from 'lucide-react'
+import { Book, Search as SearchIcon, ChevronRight, BarChart3, PieChart, Table } from 'lucide-react'
 import { useDocsTree, useDocLineCounts } from '../hooks/useDocs'
 import { useI18n } from '../hooks/useI18n'
 import SunburstChart from '../components/SunburstChart'
@@ -10,6 +10,7 @@ import type { DocNode } from '../hooks/useDocs'
 const quickLinks = [
   { name: 'docs', path: '/docs', icon: <Book size={32} />, desc: 'browse_docs', color: 'bg-blue-500' },
   { name: 'search', path: '/search', icon: <SearchIcon size={32} />, desc: 'search_docs', color: 'bg-emerald-500' },
+  { name: 'table', path: '/table', icon: <Table size={32} />, desc: 'doc_table', color: 'bg-purple-500' },
 ]
 
 function buildSunburstData(nodes: DocNode[]) {

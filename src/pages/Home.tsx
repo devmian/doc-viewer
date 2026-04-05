@@ -1,35 +1,66 @@
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { useDocsTree, useDocTitles } from '../hooks/useDocs'
-import { Link } from 'wouter'
+import DocCard from '../components/DocCard'
+import SearchBar from '../components/SearchBar'
+import RecentDocs from '../components/RecentDocs'
+import HeroSection from '../components/HeroSection'
+import SunburstChart from '../components/SunburstChart'
+import type { DocNode } from '../hooks/useDocs'
 
-const RECENT_KEY = 'doc-viewer-recent'
+interface SunburstData {
+  name: string
+  children?: SunburstData[]
+  value?: number
+}
+
+function transformToSunburst(nodes: DocNode[], parentName = 'root'): SunburstData {
+  const children = nodes.map(node => {
+    if (node.type === 'directory' && node.children) {
+      return {
+        name: node.name,
+        children: transformToSunburst(node.children, node.name).children
+      }
+    }
+    return {
+      name: node.name,
+      value: 1
+    }
+  })
+  return { name: parentName, children }
+}
 
 export default function Home() {
   const { tree, loading, error } = useDocsTree()
   const titles = useDocTitles()
-  const [recentDocs, setRecentDocs] = useState<any[]>([])
+  const [searchQuery, setSearchQuery] = useState('')
 
-  useEffect(() => {
-    const stored = localStorage.getItem(RECENT_KEY)
-    if (stored) {
-      try {
-        setRecentDocs(JSON.parse(stored))
-      } catch {}
+  const filteredTree = useMemo(() => {
+    if (!searchQuery.trim()) return tree
+    
+    const query = searchQuery.toLowerCase()
+    const filterNodes = (nodes: DocNode[]): DocNode[] => {
+      return nodes.reduce<DocNode[]>((acc, node) => {
+        const title = node.type === 'file' ? titles[node.relativePath] : null
+        const matchesName = node.name.toLowerCase().includes(query)
+        const matchesTitle = title?.toLowerCase().includes(query)
+        
+        if (matchesName || matchesTitle) {
+          acc.push(node)
+        } else if (node.type === 'directory' && node.children) {
+          const filteredChildren = filterNodes(node.children)
+          if (filteredChildren.length > 0) {
+            acc.push({ ...node, children: filteredChildren })
+          }
+        }
+        return acc
+      }, [])
     }
-  }, [])
+    return filterNodes(tree)
+  }, [tree, searchQuery, titles])
 
-  useEffect(() => {
-    const handleStorage = () => {
-      const stored = localStorage.getItem(RECENT_KEY)
-      if (stored) {
-        try {
-          setRecentDocs(JSON.parse(stored))
-        } catch {}
-      }
-    }
-    window.addEventListener('storage', handleStorage)
-    return () => window.removeEventListener('storage', handleStorage)
-  }, [])
+  const sunburstData = useMemo(() => {
+    return transformToSunburst(tree)
+  }, [tree])
 
   if (loading) {
     return (
@@ -47,34 +78,17 @@ export default function Home() {
     )
   }
 
-  const renderNode = (node: any) => {
-    const title = node.type === 'file' ? titles[node.relativePath] : null
-    return (
-      <Link
-        key={node.relativePath}
-        href={node.type === 'directory' 
-          ? `/${node.relativePath}` 
-          : `/${node.relativePath.replace('.md', '')}`}
-        className="block p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-blue-500 dark:hover:border-blue-500 hover:shadow-md transition-all"
-      >
-        <div className="flex items-start">
-          <span className="text-xl mr-2">{node.type === 'directory' ? '📁' : '📄'}</span>
-          <div>
-            <div className={node.type === 'directory' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-900 dark:text-white'}>{node.name}</div>
-            {title && <div className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-1">{title}</div>}
-          </div>
-        </div>
-      </Link>
-    )
-  }
-
-  const directories = tree.filter(n => n.type === 'directory')
-  const files = tree.filter(n => n.type === 'file')
+  const directories = filteredTree.filter(n => n.type === 'directory')
+  const files = filteredTree.filter(n => n.type === 'file')
   const allInRoot = [...directories, ...files]
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">文档浏览器</h1>
+    <div className="min-h-screen">
+      <HeroSection />
+      
+      <div className="mb-6">
+        <SearchBar onSearch={setSearchQuery} />
+      </div>
       
       {tree.length === 0 ? (
         <div className="text-center py-12 text-gray-500">
@@ -83,38 +97,64 @@ export default function Home() {
         </div>
       ) : (
         <>
-          <div className="mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">目录</h2>
-            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-              {allInRoot.map(renderNode)}
+          <RecentDocs limit={6} />
+          
+          {sunburstData.children && sunburstData.children.length > 0 && (
+            <div className="mb-8 p-6 glass rounded-xl">
+              <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4 flex items-center gap-2">
+                📊 文档概览
+              </h2>
+              <div className="flex justify-center">
+                <SunburstChart 
+                  data={sunburstData} 
+                  width={350} 
+                  height={350}
+                  onNodeClick={({ data }) => {
+                    if (data.name && data.name !== 'root') {
+                      window.location.href = `/${data.name.replace('.md', '')}`
+                    }
+                  }}
+                />
+              </div>
             </div>
-          </div>
-
-          {recentDocs.length > 0 && (
+          )}
+          
+          {allInRoot.length > 0 && (
             <div className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">最近查看</h2>
+              <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4 flex items-center gap-2">
+                📁 目录
+              </h2>
               <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-                {recentDocs.slice(0, 6).map((doc) => (
-                  <Link
-                    key={doc.path}
-                    href={`/${doc.path}`}
-                    className="block p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-blue-500 dark:hover:border-blue-500 hover:shadow-md transition-all"
-                  >
-                    <div className="flex items-start">
-                      <span className="text-xl mr-2">📄</span>
-                      <span className="text-gray-900 dark:text-white text-sm">{doc.name}</span>
-                    </div>
-                  </Link>
+                {allInRoot.map((node, index) => (
+                  <div key={node.relativePath} className={`animate-fade-in-up opacity-0 stagger-${Math.min(index + 1, 6)}`}>
+                    <DocCard
+                      name={node.name}
+                      path={node.relativePath}
+                      type={node.type}
+                      title={node.type === 'file' ? titles[node.relativePath] : null}
+                    />
+                  </div>
                 ))}
               </div>
             </div>
           )}
-
+          
           {files.length > 0 && (
             <div>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">文档</h2>
+              <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4 flex items-center gap-2">
+                📄 所有文档
+              </h2>
               <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-                {files.map(renderNode)}
+                {files.map((node, index) => (
+                  <div key={node.relativePath} className={`animate-fade-in-up opacity-0 stagger-${Math.min(index + 1, 6)}`}>
+                    <DocCard
+                      name={node.name}
+                      path={node.relativePath}
+                      type={node.type}
+                      title={titles[node.relativePath]}
+                    />
+                  </div>
+                ))}
               </div>
             </div>
           )}

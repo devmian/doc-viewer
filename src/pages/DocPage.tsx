@@ -6,6 +6,7 @@ import { useI18n } from '../hooks/useI18n'
 import type { DocNode } from '../hooks/useDocs'
 import MarkdownViewer from '../components/MarkdownViewer'
 import Breadcrumb from '../components/Breadcrumb'
+import TableOfContents from '../components/TableOfContents'
 import { useEffect } from 'react'
 
 const RECENT_KEY = 'doc-viewer-recent'
@@ -149,20 +150,27 @@ export default function DocPage() {
         )}
         
         {content && (
-          <article className="animate-in fade-in duration-1000">
+          <div className="animate-in fade-in duration-1000 relative">
             {content.match(/^#\s+(.+)$/m)?.[1] && (
-              <header className="mb-8 pb-8 border-b border-[var(--border-primary)]/50">
-                <h1 className="text-4xl sm:text-5xl font-extrabold text-[var(--text-primary)] tracking-tight leading-tight">
-                  {content.match(/^#\s+(.+)$/m)?.[1]}
-                </h1>
-                <div className="mt-4 flex items-center text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)] opacity-50">
-                  <FileText size={14} className="mr-2" />
-                  <span>Documentation Page</span>
+              <div className="mb-8 pb-8 border-b border-[var(--border-primary)]/50">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <h1 className="text-4xl sm:text-5xl font-extrabold text-[var(--text-primary)] tracking-tight leading-tight">
+                      {content.match(/^#\s+(.+)$/m)?.[1]}
+                    </h1>
+                    <div className="mt-4 flex items-center text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)] opacity-50">
+                      <FileText size={14} className="mr-2" />
+                      <span>Documentation Page</span>
+                    </div>
+                  </div>
+                  <div className="fixed right-8 top-24 z-40">
+                    <TableOfContents content={content} />
+                  </div>
                 </div>
-              </header>
+              </div>
             )}
             <MarkdownViewer content={content} skipFirstTitle />
-          </article>
+          </div>
         )}
       </div>
     )

@@ -3,9 +3,10 @@ import { ThemeProvider } from './hooks/useTheme'
 import { I18nProvider, useI18n } from './hooks/useI18n'
 import { useDocsTree } from './hooks/useDocs'
 import Layout from './components/Layout'
-import Dashboard from './pages/Dashboard'
+import Home from './pages/Home'
 import DocPage from './pages/DocPage'
 import SearchPage from './pages/SearchPage'
+import DocTablePage from './pages/DocTablePage'
 
 function AppContent() {
   const { tree } = useDocsTree()
@@ -16,6 +17,7 @@ function AppContent() {
     if (location === '/' || location === '') return t('dashboard')
     if (location === '/docs' || location === '/docs/') return t('docs')
     if (location === '/search') return t('search')
+    if (location === '/table') return t('table')
     
     const cleanPath = location.replace(/^\//, '')
     const parts = cleanPath.split('/')
@@ -40,10 +42,11 @@ function AppContent() {
   return (
     <Layout tree={tree} title={getTitle()}>
       <Switch>
-        <Route path="/" component={Dashboard} />
+        <Route path="/" component={Home} />
         <Route path="/docs" component={DocPage} />
         <Route path="/docs/:id" component={DocPage} />
         <Route path="/search" component={SearchPage} />
+        <Route path="/table" component={DocTablePage} />
         <Route component={DocPage} />
       </Switch>
     </Layout>

@@ -1,11 +1,9 @@
 import { useLocation } from 'wouter'
 import { Search as SearchIcon, FileSearch } from 'lucide-react'
 import Search from '../components/Search'
-import { useI18n } from '../hooks/useI18n'
 
 export default function SearchPage() {
   const [location] = useLocation()
-  const { t } = useI18n()
   const query = new URLSearchParams(location.split('?')[1] || '').get('query') || ''
 
   return (
