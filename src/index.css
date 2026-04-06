@@ -264,3 +264,124 @@ body {
 .stagger-4 { animation-delay: 0.4s; }
 .stagger-5 { animation-delay: 0.5s; }
 .stagger-6 { animation-delay: 0.6s; }
+
+/* Sidebar Glass Effect */
+.sidebar-glass {
+  position: relative;
+  background-color: var(--bg-secondary);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-right: 1px solid var(--border-primary);
+}
+
+.sidebar-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.dark .sidebar-glass {
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Sidebar Hover Effects */
+.sidebar-logo-hover {
+  transition: all 0.2s ease;
+}
+
+.sidebar-logo-hover:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+}
+
+.sidebar-item-hover {
+  transition: all 0.2s ease;
+}
+
+.sidebar-item-hover:hover {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+/* Sidebar Search */
+.sidebar-search {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+:not(.dark) .sidebar-search {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-search:focus-within {
+  border-color: var(--brand-primary);
+  background: rgba(59, 130, 246, 0.1);
+}
+
+/* Sidebar Status Bar */
+.sidebar-status-bar {
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+:not(.dark) .sidebar-status-bar {
+  background: rgba(0, 0, 0, 0.05);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Online Indicator */
+.online-indicator {
+  width: 10px;
+  height: 10px;
+  background: #22c55e;
+  border: 2px solid var(--bg-secondary);
+  border-radius: 50%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+/* Quick Action Button */
+.sidebar-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  transition: all 0.2s ease;
+}
+
+:not(.dark) .sidebar-action-btn {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.sidebar-action-btn:hover {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: var(--brand-primary);
+}
+
+/* User Avatar */
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  flex-shrink: 0;
+}
