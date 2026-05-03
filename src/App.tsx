@@ -7,6 +7,7 @@ import Home from './pages/Home'
 import DocPage from './pages/DocPage'
 import SearchPage from './pages/SearchPage'
 import DocTablePage from './pages/DocTablePage'
+import HistoryMapPage from './features/history-map/HistoryMapPage'
 
 function AppContent() {
   const { tree } = useDocsTree()
@@ -18,6 +19,7 @@ function AppContent() {
     if (location === '/docs' || location === '/docs/') return t('docs')
     if (location === '/search') return t('search')
     if (location === '/table') return t('table')
+    if (location === '/history') return t('history_map')
     
     const cleanPath = location.replace(/^\//, '')
     const parts = cleanPath.split('/')
@@ -47,6 +49,7 @@ function AppContent() {
         <Route path="/docs/:id" component={DocPage} />
         <Route path="/search" component={SearchPage} />
         <Route path="/table" component={DocTablePage} />
+        <Route path="/history" component={HistoryMapPage} />
         <Route component={DocPage} />
       </Switch>
     </Layout>

@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import { Link } from 'wouter'
-import { Menu, Home, Search as SearchIcon, X } from 'lucide-react'
+import { Menu, Home, Search as SearchIcon, Map, X } from 'lucide-react'
 import Sidebar from './Sidebar'
 import HeaderButtons from './HeaderButtons'
 import Search from './Search'
@@ -62,6 +62,9 @@ export default function Layout({ children, tree, title }: LayoutProps) {
                 <Link href="/" className="p-2 rounded-xl text-[var(--text-secondary)] hover:bg-[var(--brand-light)] hover:text-[var(--brand-primary)] transition-all duration-200" aria-label="Go home">
                   <Home size={22} />
                 </Link>
+                <Link href="/history" className="p-2 rounded-xl text-[var(--text-secondary)] hover:bg-[var(--brand-light)] hover:text-[var(--brand-primary)] transition-all duration-200" aria-label="History Map">
+                  <Map size={22} />
+                </Link>
                 {title && (
                   <div className="hidden sm:block h-6 w-px bg-[var(--border-primary)] mx-2" />
                 )}
@@ -97,7 +100,7 @@ export default function Layout({ children, tree, title }: LayoutProps) {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 flex flex-col p-4 sm:p-8 lg:p-12 w-full">
+        <main className="flex-1 w-full overflow-hidden">
           {children}
         </main>
 

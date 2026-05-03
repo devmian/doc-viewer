@@ -18,9 +18,9 @@ export default function Mermaid({ code }: MermaidProps) {
       containerRef.current.innerHTML = ''
       mermaid.render(`mermaid-${Date.now()}`, code).then((result) => {
         if (containerRef.current) {
-          containerRef.current.innerHTML = result.svg
+          containerRef.current.innerHTML = typeof result === 'string' ? result : result.svg
         }
-      }).catch((err) => {
+      }).catch((err: unknown) => {
         console.error('Mermaid error:', err)
         if (containerRef.current) {
           containerRef.current.textContent = '图表渲染失败'
