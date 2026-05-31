@@ -103,7 +103,6 @@ const loadData = useCallback(async () => {
         }
       });
 
-      console.log({ year, era, points, lineFeatures, polygonFeatures });
       setMarkers(points);
       setLines(lineFeatures);
       setPolygons(polygonFeatures);
