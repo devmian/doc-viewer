@@ -16,14 +16,14 @@ const dynastyRanges: DynastyRange[] = [
   { nameKey: 'type_dynasty_zhou', startYear: -1046, endYear: -257, color: '#059669', position: 0 },
   { nameKey: 'type_spring_autumn', startYear: -770, endYear: -477, color: '#84cc16', position: 0 },
   { nameKey: 'type_warring_states', startYear: -475, endYear: -222, color: '#22c55e', position: 0 },
-  { nameKey: 'type_dynasty_qin', startYear: -221, endYear: -207, color: '#1f2937', position: 1 },
+  { nameKey: 'type_dynasty_qin', startYear: -221, endYear: -207, color: '#1f2937', position: -1 },
   { nameKey: 'type_dynasty_han', startYear: -202, endYear: 219, color: '#dc2626', position: 0 },
-  { nameKey: 'type_three_kingdoms', startYear: 220, endYear: 279, color: '#f97316', position: 1 },
+  { nameKey: 'type_three_kingdoms', startYear: 220, endYear: 279, color: '#f97316', position: -1 },
   { nameKey: 'type_dynasty_jin', startYear: 281, endYear: 419, color: '#14b8a6', position: 0 },
   { nameKey: 'type_southern_northern', startYear: 420, endYear: 589, color: '#ec4899', position: 0 },
-  { nameKey: 'type_dynasty_sui', startYear: 590, endYear: 617, color: '#06b6d4', position: 1 },
+  { nameKey: 'type_dynasty_sui', startYear: 590, endYear: 617, color: '#06b6d4', position: -1 },
   { nameKey: 'type_dynasty_tang', startYear: 619, endYear: 906, color: '#f59e0b', position: 0 },
-  { nameKey: 'type_five_dynasties', startYear: 908, endYear: 959, color: '#a855f7', position: 1 },
+  { nameKey: 'type_five_dynasties', startYear: 908, endYear: 959, color: '#a855f7', position: -1 },
   { nameKey: 'type_dynasty_song', startYear: 960, endYear: 1279, color: '#2563eb', position: 0 },
   { nameKey: 'type_dynasty_yuan', startYear: 1271, endYear: 1367, color: '#7c3aed', position: 0 },
   { nameKey: 'type_dynasty_ming', startYear: 1368, endYear: 1643, color: '#db2777', position: 0 },
@@ -107,27 +107,25 @@ const TimelineSlider: React.FC = () => {
       <div className="w-full bg-gray-900/95 backdrop-blur-md rounded-lg shadow-lg border border-gray-700 p-2">
         
         {/* 顶部标签 */}
-        <div className="relative h-12 mb-1">
-          {segments.map((seg, idx) => {
-            const isActive = selectedEntity?.nameKey === seg.nameKey;
-            return (
+        <div className="relative h-10 mb-1">
+            {segments.filter(s => s.position >= 0).map((seg, idx) => {
+              const isActive = selectedEntity?.nameKey === seg.nameKey;
+              return (
               <div
                 key={`label-${idx}`}
                 className="absolute flex flex-col items-center cursor-pointer group pointer-events-auto"
                 style={{
                   left: `${seg.left}%`,
-                  bottom: seg.position === 1 ? '20px' : '0px',
+                  bottom: '0px',
                   transform: 'translateX(-50%)',
                 }}
                 onClick={() => handleDynastyClick(seg)}
               >
                 <span 
-                  className={`text-[10px] font-bold whitespace-nowrap transition-all px-1 py-0.5 rounded ${
+                  className={`text-[10px] font-bold whitespace-nowrap transition-all px-1.5 py-0.5 rounded ${
                     isActive
                       ? 'bg-white text-gray-900 ring-2 ring-white shadow-lg'
-                      : seg.position === 1
-                        ? 'bg-gray-700 text-white ring-1 ring-gray-500' 
-                        : 'bg-gray-800/70 text-gray-400 group-hover:text-white group-hover:bg-gray-700'
+                      : 'bg-gray-800/70 text-gray-400 group-hover:text-white group-hover:bg-gray-700'
                   }`}
                 >
                   {t(seg.nameKey)}
@@ -135,7 +133,7 @@ const TimelineSlider: React.FC = () => {
                 <div 
                   className={`w-px transition-all ${isActive ? 'bg-white' : 'bg-gray-500 group-hover:bg-white'}`}
                   style={{
-                    height: seg.position === 1 ? '12px' : '6px',
+                    height: '6px',
                     marginTop: '2px',
                     opacity: isActive ? 1 : 0.5
                   }}
@@ -185,6 +183,42 @@ const TimelineSlider: React.FC = () => {
             onChange={(e) => setYear(Number(e.target.value))}
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30"
           />
+        </div>
+
+        {/* 底部标签 */}
+        <div className="relative h-8 mb-1">
+          {segments.filter(s => s.position === -1).map((seg, idx) => {
+            const isActive = selectedEntity?.nameKey === seg.nameKey;
+            return (
+              <div
+                key={`bottom-label-${idx}`}
+                className="absolute flex flex-col items-center cursor-pointer group pointer-events-auto"
+                style={{
+                  left: `${seg.left}%`,
+                  top: '0px',
+                  transform: 'translateX(-50%)',
+                }}
+                onClick={() => handleDynastyClick(seg)}
+              >
+                <div 
+                  className={`w-px transition-all ${isActive ? 'bg-white' : 'bg-gray-500 group-hover:bg-white'}`}
+                  style={{
+                    height: '6px',
+                    opacity: isActive ? 1 : 0.5
+                  }}
+                />
+                <span 
+                  className={`text-[10px] font-bold whitespace-nowrap transition-all px-1.5 py-0.5 rounded mt-0.5 ${
+                    isActive
+                      ? 'bg-white text-gray-900 ring-2 ring-white shadow-lg'
+                      : 'bg-gray-800/70 text-gray-400 group-hover:text-white group-hover:bg-gray-700'
+                  }`}
+                >
+                  {t(seg.nameKey)}
+                </span>
+              </div>
+            );
+          })}
         </div>
 
         {/* 底部控制 */}
