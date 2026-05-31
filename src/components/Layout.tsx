@@ -100,7 +100,7 @@ export default function Layout({ children, tree, title }: LayoutProps) {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 w-full overflow-hidden">
+        <main className="flex-1 w-full overflow-hidden px-4 sm:px-6 lg:px-8 py-6">
           {children}
         </main>
 
