@@ -28,7 +28,7 @@ const InfoPanel: React.FC = () => {
   };
 
   return (
-    <div className="absolute top-4 right-4 z-[1000] w-96 bg-gray-900/95 backdrop-blur-md text-white rounded-xl shadow-2xl border border-gray-700 overflow-hidden transition-all duration-300 animate-in slide-in-from-right">
+    <div className="absolute top-4 right-4 z-[1000] w-72 bg-gray-900/95 backdrop-blur-md text-white rounded-xl shadow-2xl border border-gray-700 overflow-hidden transition-all duration-300 animate-in slide-in-from-right">
       <div className="p-4 border-b border-gray-700 flex justify-between items-start">
         <div>
           <div className="flex items-center gap-2 mb-1">

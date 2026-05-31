@@ -1,13 +1,13 @@
 import React, { useRef, useEffect, useMemo } from 'react';
-import { useHistoryMapStore } from './store/useMapStore';
+import { useHistoryMapStore, type MapEntity } from './store/useMapStore';
 import { useI18n } from '../../hooks/useI18n';
+import mockData from './data/mockData';
 
 interface DynastyRange {
   nameKey: string;
   startYear: number;
   endYear: number;
   color: string;
-  // -1 = 在轴下方, 0 = 在轴上, 1 = 在轴上方
   position: -1 | 0 | 1;
 }
 
@@ -36,8 +36,25 @@ const TOTAL_YEARS = MAX_YEAR - MIN_YEAR;
 
 const yearToPercent = (year: number) => ((year - MIN_YEAR) / TOTAL_YEARS) * 100;
 
+// Build a lookup: nameKey -> MapEntity from mockData
+const entityByNameKey: Record<string, MapEntity> = {};
+for (const feat of mockData.features) {
+  const p = feat.properties;
+  if (p && p.nameKey) {
+    entityByNameKey[p.nameKey] = {
+      id: p.id,
+      nameKey: p.nameKey,
+      descKey: p.descKey,
+      type: p.type || 'dynasty',
+      startYear: p.startYear,
+      endYear: p.endYear,
+      tags: p.tags || [],
+    };
+  }
+}
+
 const TimelineSlider: React.FC = () => {
-  const { currentYear, setYear, isClassroomMode: _isClassroomMode, isPlaying, setIsPlaying } = useHistoryMapStore();
+  const { currentYear, setYear, selectEntity, selectedEntity, isClassroomMode: _isClassroomMode, isPlaying, setIsPlaying } = useHistoryMapStore();
   const intervalRef = useRef<number | null>(null);
   const { t } = useI18n();
 
@@ -69,6 +86,14 @@ const TimelineSlider: React.FC = () => {
     };
   }, []);
 
+  const handleDynastyClick = (seg: DynastyRange) => {
+    setYear(seg.startYear);
+    const entity = entityByNameKey[seg.nameKey];
+    if (entity) {
+      selectEntity(entity);
+    }
+  };
+
   const segments = useMemo(() => {
     return dynastyRanges.map((d) => {
       const left = yearToPercent(d.startYear);
@@ -83,36 +108,41 @@ const TimelineSlider: React.FC = () => {
         
         {/* 顶部标签 */}
         <div className="relative h-12 mb-1">
-          {segments.map((seg, idx) => (
-            <div
-              key={`label-${idx}`}
-              className="absolute flex flex-col items-center cursor-pointer group pointer-events-auto"
-              style={{
-                left: `${seg.left}%`,
-                bottom: seg.position === 1 ? '20px' : '0px',
-                transform: 'translateX(-50%)',
-              }}
-              onClick={() => setYear(seg.startYear)}
-            >
-              <span 
-                className={`text-[10px] font-bold whitespace-nowrap transition-all px-1 py-0.5 rounded ${
-                  seg.position === 1
-                    ? 'bg-gray-700 text-white ring-1 ring-gray-500' 
-                    : 'bg-gray-800/70 text-gray-400 group-hover:text-white group-hover:bg-gray-700'
-                }`}
-              >
-                {t(seg.nameKey)}
-              </span>
-              <div 
-                className="w-px bg-gray-500 transition-all group-hover:bg-white"
+          {segments.map((seg, idx) => {
+            const isActive = selectedEntity?.nameKey === seg.nameKey;
+            return (
+              <div
+                key={`label-${idx}`}
+                className="absolute flex flex-col items-center cursor-pointer group pointer-events-auto"
                 style={{
-                  height: seg.position === 1 ? '12px' : '6px',
-                  marginTop: '2px',
-                  opacity: 0.5
+                  left: `${seg.left}%`,
+                  bottom: seg.position === 1 ? '20px' : '0px',
+                  transform: 'translateX(-50%)',
                 }}
-              />
-            </div>
-          ))}
+                onClick={() => handleDynastyClick(seg)}
+              >
+                <span 
+                  className={`text-[10px] font-bold whitespace-nowrap transition-all px-1 py-0.5 rounded ${
+                    isActive
+                      ? 'bg-white text-gray-900 ring-2 ring-white shadow-lg'
+                      : seg.position === 1
+                        ? 'bg-gray-700 text-white ring-1 ring-gray-500' 
+                        : 'bg-gray-800/70 text-gray-400 group-hover:text-white group-hover:bg-gray-700'
+                  }`}
+                >
+                  {t(seg.nameKey)}
+                </span>
+                <div 
+                  className={`w-px transition-all ${isActive ? 'bg-white' : 'bg-gray-500 group-hover:bg-white'}`}
+                  style={{
+                    height: seg.position === 1 ? '12px' : '6px',
+                    marginTop: '2px',
+                    opacity: isActive ? 1 : 0.5
+                  }}
+                />
+              </div>
+            );
+          })}
         </div>
 
         {/* 轨道 */}
@@ -129,7 +159,7 @@ const TimelineSlider: React.FC = () => {
                   opacity: 0.85,
                   minWidth: '2px'
                 }}
-                onClick={() => setYear(seg.startYear)}
+                onClick={() => handleDynastyClick(seg)}
               >
                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-1 py-0.5 bg-black/90 text-white text-[9px] rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap">
                   {t(seg.nameKey)}: {formatYear(seg.startYear)}-{formatYear(seg.endYear)}
