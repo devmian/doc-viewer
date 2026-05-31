@@ -23,18 +23,19 @@ const createIcon = (type: string) => {
 };
 
 const getEraFromYear = (year: number): string => {
-  if (year < -1046) return 'shang';
-  if (year < -256) return 'zhou';
-  if (year < -206) return 'qin';
-  if (year < 220) return 'han';
-  if (year < 581) return 'northern-southern';
-  if (year < 618) return 'sui';
-  if (year < 907) return 'tang';
-  if (year < 960) return 'five-dynasties';
-  if (year < 1127) return 'northern-song';
-  if (year < 1279) return 'southern-song';
-  if (year < 1368) return 'yuan';
-  if (year < 1644) return 'ming';
+  if (year >= -1600 && year <= -1047) return 'shang';
+  if (year >= -1046 && year <= -257) return 'zhou';
+  if (year >= -256 && year <= -207) return 'qin';
+  if (year >= -206 && year <= 219) return 'han';
+  if (year >= 220 && year <= 579) return 'northern-southern';
+  if (year >= 580 && year <= 617) return 'sui';
+  if (year >= 618 && year <= 906) return 'tang';
+  if (year >= 907 && year <= 959) return 'five-dynasties';
+  if (year >= 960 && year <= 1126) return 'northern-song';
+  if (year >= 1127 && year <= 1278) return 'southern-song';
+  if (year >= 1279 && year <= 1367) return 'yuan';
+  if (year >= 1368 && year <= 1643) return 'ming';
+  if (year >= 1644) return 'qing';
   return 'qing';
 };
 
@@ -67,25 +68,17 @@ const MapContent: React.FC = () => {
   const [markers, setMarkers] = useState<any[]>([]);
   const [lines, setLines] = useState<any[]>([]);
   const [polygons, setPolygons] = useState<any[]>([]);
-  const lastYearRef = useRef<number>(0);
+  const loadReqId = useRef(0);
 
 const loadData = useCallback(async () => {
+    const id = ++loadReqId.current;
     const year = useHistoryMapStore.getState().currentYear;
-    
-    // Skip if same year
-    if (year === lastYearRef.current) return;
-    lastYearRef.current = year;
-    
-    setMarkers([]);
-    setLines([]);
-    setPolygons([]);
-    
     const era = getEraFromYear(year);
     try {
       const data = await historyDataService.fetchEraData(era, lodLevel);
       
-      if (useHistoryMapStore.getState().currentYear !== year) return;
-      
+      if (id !== loadReqId.current) return;
+
       const points: any[] = [];
       const lineFeatures: any[] = [];
       const polygonFeatures: any[] = [];
@@ -110,6 +103,7 @@ const loadData = useCallback(async () => {
         }
       });
 
+      console.log({ year, era, points, lineFeatures, polygonFeatures });
       setMarkers(points);
       setLines(lineFeatures);
       setPolygons(polygonFeatures);
@@ -190,7 +184,7 @@ const loadData = useCallback(async () => {
       
       {polygons.length > 0 && (
         <GeoJSON
-          key={`poly-${currentYear}-${lodLevel}`}
+          key={`poly-${polygons.map(f => f.properties?.id).join(',') || 'none'}`}
           data={{ type: 'FeatureCollection', features: polygons } as any}
           style={polygonStyle}
           onEachFeature={onPolygonEachFeature}
@@ -199,7 +193,7 @@ const loadData = useCallback(async () => {
       
       {lines.length > 0 && (
         <GeoJSON
-          key={`line-${currentYear}-${lodLevel}`}
+          key={`line-${lines.map(f => f.properties?.id).join(',') || 'none'}`}
           data={{ type: 'FeatureCollection', features: lines } as any}
           style={lineStyle}
           onEachFeature={onLineEachFeature}
