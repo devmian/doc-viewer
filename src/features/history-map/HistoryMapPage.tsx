@@ -12,7 +12,7 @@ const HistoryMapPage: React.FC = () => {
       </div>
       
       {/* Timeline - bottom, floating above map */}
-      <div className="absolute bottom-2 left-2 right-2 z-[1000]">
+      <div className="absolute bottom-2 left-2 right-2 z-[1000] pointer-events-none">
         <TimelineSlider />
       </div>
       

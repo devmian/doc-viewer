@@ -45,7 +45,7 @@ for (const feat of mockData.features) {
       id: p.id,
       nameKey: p.nameKey,
       descKey: p.descKey,
-      type: p.type || 'dynasty',
+      type: (p.type as MapEntity['type']) || 'dynasty',
       startYear: p.startYear,
       endYear: p.endYear,
       tags: p.tags || [],
@@ -151,7 +151,7 @@ const TimelineSlider: React.FC = () => {
             {segments.map((seg, idx) => (
               <div
                 key={`bar-${idx}`}
-                className="absolute top-0 bottom-0 hover:brightness-125 transition-all cursor-pointer group"
+                className="absolute top-0 bottom-0 hover:brightness-125 transition-all cursor-pointer group pointer-events-auto"
                 style={{
                   left: `${seg.left}%`,
                   width: `${seg.width}%`,
@@ -183,7 +183,7 @@ const TimelineSlider: React.FC = () => {
             max={MAX_YEAR}
             value={currentYear}
             onChange={(e) => setYear(Number(e.target.value))}
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30"
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30 pointer-events-auto"
           />
         </div>
 
@@ -196,7 +196,7 @@ const TimelineSlider: React.FC = () => {
             </span>
           </div>
           <button
-            className={`text-[10px] px-2 py-0.5 rounded transition-all font-medium ${
+            className={`text-[10px] px-2 py-0.5 rounded transition-all font-medium pointer-events-auto ${
               isPlaying 
                 ? 'bg-red-500/20 text-red-400 border border-red-500/30' 
                 : 'bg-blue-600 text-white hover:bg-blue-500'

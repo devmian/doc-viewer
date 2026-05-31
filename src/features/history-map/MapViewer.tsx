@@ -84,6 +84,8 @@ const loadData = useCallback(async () => {
     try {
       const data = await historyDataService.fetchEraData(era, lodLevel);
       
+      if (useHistoryMapStore.getState().currentYear !== year) return;
+      
       const points: any[] = [];
       const lineFeatures: any[] = [];
       const polygonFeatures: any[] = [];
