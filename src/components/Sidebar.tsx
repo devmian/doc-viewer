@@ -25,7 +25,7 @@ const filterTree = (node: DocNode, searchTerm: string): boolean => {
 
 function TreeItem({ node, depth, searchTerm }: TreeItemProps) {
   const [location] = useLocation()
-  const [expanded, setExpanded] = useState(depth < 2)
+  const [expanded, setExpanded] = useState(false)
   
   const isActive = node.type === 'file' && `/${node.relativePath.replace(/\.md$/, '')}` === location
   const isDir = node.type === 'directory'

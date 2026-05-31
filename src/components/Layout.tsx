@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import { Link } from 'wouter'
-import { Menu, Home, Search as SearchIcon, Map, X } from 'lucide-react'
+import { Menu, Home, Search as SearchIcon, Map, X, PanelLeftClose, PanelLeft } from 'lucide-react'
 import Sidebar from './Sidebar'
 import HeaderButtons from './HeaderButtons'
 import Search from './Search'
@@ -15,6 +15,7 @@ interface LayoutProps {
 export default function Layout({ children, tree, title }: LayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+  const [sidebarDesktopOpen, setSidebarDesktopOpen] = useState(true)
 
   return (
     <div className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
@@ -41,12 +42,14 @@ export default function Layout({ children, tree, title }: LayoutProps) {
       </div>
 
       {/* Desktop sidebar */}
-      <div className="hidden xl:block fixed inset-y-0 left-0 z-30 w-72 border-r border-[var(--border-primary)] bg-[var(--bg-secondary)]">
-        <Sidebar tree={tree} />
-      </div>
+      {sidebarDesktopOpen && (
+        <div className="hidden xl:block fixed inset-y-0 left-0 z-30 w-72 border-r border-[var(--border-primary)] bg-[var(--bg-secondary)]">
+          <Sidebar tree={tree} />
+        </div>
+      )}
 
       {/* Main content */}
-      <div className="xl:pl-72 flex flex-col min-h-screen">
+      <div className={`flex flex-col min-h-screen ${sidebarDesktopOpen ? 'xl:pl-72' : ''}`}>
         {/* Header */}
         <header className="sticky top-0 z-20 glass-header border-b border-[var(--border-primary)]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -58,6 +61,13 @@ export default function Layout({ children, tree, title }: LayoutProps) {
                   aria-label="Open menu"
                 >
                   <Menu size={22} />
+                </button>
+                <button
+                  onClick={() => setSidebarDesktopOpen(!sidebarDesktopOpen)}
+                  className="hidden xl:flex p-2 rounded-xl text-[var(--text-secondary)] hover:bg-[var(--brand-light)] hover:text-[var(--brand-primary)] transition-all duration-200"
+                  aria-label={sidebarDesktopOpen ? 'Hide sidebar' : 'Show sidebar'}
+                >
+                  {sidebarDesktopOpen ? <PanelLeftClose size={22} /> : <PanelLeft size={22} />}
                 </button>
                 <Link href="/" className="p-2 rounded-xl text-[var(--text-secondary)] hover:bg-[var(--brand-light)] hover:text-[var(--brand-primary)] transition-all duration-200" aria-label="Go home">
                   <Home size={22} />
