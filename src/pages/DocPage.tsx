@@ -41,28 +41,31 @@ function ItemCard({ item, title }: { item: DocNode; title?: string | null }) {
   return (
     <Link
       href={`/${item.relativePath.replace('.md', '')}`}
-      className="group relative flex items-start p-5 border border-[var(--border-primary)] rounded-2xl bg-[var(--bg-secondary)] hover:border-[var(--brand-primary)] hover:shadow-xl transition-all duration-300 overflow-hidden"
+      className="neumorphic-card block p-5"
     >
-      <div className={`absolute top-0 right-0 w-24 h-24 ${isDir ? 'bg-blue-500' : 'bg-emerald-500'} opacity-[0.03] -translate-y-8 translate-x-8 rounded-full group-hover:scale-150 transition-transform duration-500`} />
-      
-      <div className={`shrink-0 p-3 rounded-xl ${isDir ? 'bg-blue-50 text-blue-600 dark:bg-blue-950/30' : 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30'} group-hover:scale-110 transition-transform`}>
-        {isDir ? <Folder size={24} strokeWidth={2.5} /> : <FileText size={24} strokeWidth={2.5} />}
-      </div>
-      
-      <div className="ml-4 flex-1 min-w-0">
-        <div className="flex items-center justify-between">
-          <div className={`font-bold text-base truncate ${isDir ? 'text-[var(--text-primary)] group-hover:text-blue-600' : 'text-[var(--text-primary)] group-hover:text-emerald-600'} transition-colors`}>
-            {item.name}
-          </div>
-          <ChevronRight size={16} className="text-[var(--text-secondary)] opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all shrink-0" />
+      <div className="flex items-start gap-4">
+        <div className="flex items-center justify-center w-12 h-12 rounded-xl shrink-0" style={{
+          background: 'var(--inset-bg)',
+          boxShadow: 'var(--shadow-inset-sm)'
+        }}>
+          {isDir ? <Folder size={22} strokeWidth={2.5} className="text-[var(--brand-primary)]" /> : <FileText size={22} strokeWidth={2.5} className="text-[var(--text-secondary)]" />}
         </div>
-        {title && (
-          <div className="text-sm text-[var(--text-secondary)] mt-1.5 line-clamp-2 opacity-80 leading-relaxed font-medium">
-            {title}
+        
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center justify-between">
+            <div className={`font-semibold text-base truncate text-[var(--text-primary)]`}>
+              {item.name}
+            </div>
+            <ChevronRight size={16} className="text-[var(--text-secondary)] opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all shrink-0" />
           </div>
-        )}
-        <div className="mt-4 flex items-center text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)] opacity-40 group-hover:opacity-100 transition-opacity">
-          <span>{isDir ? 'Directory' : 'Document'}</span>
+          {title && (
+            <div className="text-sm text-[var(--text-secondary)] mt-1 line-clamp-2 leading-relaxed font-medium">
+              {title}
+            </div>
+          )}
+          <div className="mt-3 flex items-center text-[10px] font-bold uppercase tracking-widest text-[var(--text-secondary)] opacity-40">
+            <span>{isDir ? 'Directory' : 'Document'}</span>
+          </div>
         </div>
       </div>
     </Link>
@@ -125,7 +128,7 @@ export default function DocPage() {
         {loading && (
           <div className="py-20 flex flex-col items-center justify-center space-y-4">
             <Loader2 size={40} className="animate-spin text-[var(--brand-primary)] opacity-40" />
-            <p className="text-sm font-bold tracking-widest uppercase text-[var(--text-secondary)] opacity-50 px-4 py-1.5 bg-[var(--brand-light)] rounded-full">
+            <p className="text-sm font-bold tracking-widest uppercase text-[var(--text-secondary)] opacity-50 px-4 py-1.5 neumorphic-inset">
               {t('loading')}
             </p>
           </div>
@@ -133,7 +136,7 @@ export default function DocPage() {
         
         {error && (
           <div className="py-20 text-center">
-            <div className="inline-flex p-4 bg-red-50 dark:bg-red-950/30 text-red-500 rounded-full mb-4">
+            <div className="inline-flex p-4 neumorphic-inset text-red-500 rounded-full mb-4">
               <span className="text-3xl font-bold">!</span>
             </div>
             <p className="text-lg font-bold text-[var(--text-primary)]">{t('load_failed')}</p>
@@ -155,7 +158,7 @@ export default function DocPage() {
               <div className="mb-8 pb-8 border-b border-[var(--border-primary)]/50">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1">
-                    <h1 className="text-4xl sm:text-5xl font-extrabold text-[var(--text-primary)] tracking-tight leading-tight">
+                    <h1 className="text-4xl sm:text-5xl font-bold text-[var(--text-primary)] tracking-tight leading-tight">
                       {content.match(/^#\s+(.+)$/m)?.[1]}
                     </h1>
                     <div className="mt-4 flex items-center text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)] opacity-50">
@@ -169,7 +172,7 @@ export default function DocPage() {
                 </div>
               </div>
             )}
-            <MarkdownViewer content={content} skipFirstTitle />
+            <MarkdownViewer content={content} skipFirstTitle docPath={mdPath} />
           </div>
         )}
       </div>

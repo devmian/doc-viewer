@@ -236,6 +236,39 @@ function docsPlugin(): Plugin {
             return
           }
           
+          if (action === 'media') {
+            const mediaPath = url.searchParams.get('path')
+            if (!mediaPath) {
+              res.statusCode = 400
+              res.end(JSON.stringify({ error: 'Missing path' }))
+              return
+            }
+            const safePath = path.resolve(DOCS_PATH, mediaPath)
+            if (!safePath.startsWith(DOCS_PATH)) {
+              res.statusCode = 403
+              res.end('Forbidden')
+              return
+            }
+            if (fs.existsSync(safePath) && fs.statSync(safePath).isFile()) {
+              const ext = path.extname(safePath)
+              const contentTypes: Record<string, string> = {
+                '.svg': 'image/svg+xml',
+                '.png': 'image/png',
+                '.jpg': 'image/jpeg',
+                '.jpeg': 'image/jpeg',
+                '.gif': 'image/gif',
+                '.webp': 'image/webp'
+              }
+              res.setHeader('Content-Type', contentTypes[ext] || 'application/octet-stream')
+              res.setHeader('Cache-Control', 'public, max-age=3600')
+              res.end(fs.readFileSync(safePath))
+            } else {
+              res.statusCode = 404
+              res.end('Not found')
+            }
+            return
+          }
+
           res.statusCode = 400
           res.end(JSON.stringify({ error: 'Unknown action' }))
           return

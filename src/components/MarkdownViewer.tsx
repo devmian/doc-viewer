@@ -12,6 +12,7 @@ function slugify(text: string): string {
 interface MarkdownViewerProps {
   content: string
   skipFirstTitle?: boolean
+  docPath?: string
 }
 
 function CodeBlock({ className, children, ...props }: any) {
@@ -39,7 +40,11 @@ function CodeBlock({ className, children, ...props }: any) {
     <div className="relative group overflow-hidden">
       <button
         onClick={handleCopy}
-        className="absolute right-3 top-3 p-2 rounded-lg bg-slate-800/50 text-slate-400 hover:bg-slate-700 hover:text-white transition-all opacity-0 group-hover:opacity-100 z-10"
+        className="absolute right-3 top-3 p-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 z-10" style={{
+          background: 'var(--inset-bg)',
+          color: 'var(--text-secondary)',
+          boxShadow: 'var(--shadow-inset-sm)'
+        }}
         title="Copy code"
       >
         {copied ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
@@ -51,8 +56,19 @@ function CodeBlock({ className, children, ...props }: any) {
   )
 }
 
-export default function MarkdownViewer({ content, skipFirstTitle }: MarkdownViewerProps) {
-  let processedContent = content.replace(/\.\.\/\.\.\/images\//g, '/images/')
+export default function MarkdownViewer({ content, skipFirstTitle, docPath }: MarkdownViewerProps) {
+  let processedContent = content
+    .replace(/\.\.\/\.\.\/images\//g, '/images/')
+    .replace(/!\[([^\]]*)\]\(images\/\)/g, '')
+    .replace(/!\[([^\]]*)\]\(about:blank\)/g, '')
+  
+  if (docPath) {
+    const docDir = docPath.split('/').slice(0, -1).join('/')
+    processedContent = processedContent.replace(/!\[([^\]]*)\]\(images\/([^)]*)\)/g, (_, alt, imgPath) => {
+      const ext = imgPath.includes('.') ? '' : '.png'
+      return `![${alt}](/api/docs?action=media&path=${encodeURIComponent(docDir + '/images/' + imgPath + ext)})`
+    })
+  }
   
   if (skipFirstTitle) {
     processedContent = processedContent.replace(/^#\s+.+$/m, '').replace(/^\n+/, '')

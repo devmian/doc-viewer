@@ -7,7 +7,7 @@ export default function LanguageToggle() {
   return (
     <button
       onClick={() => setLocale(locale === 'zh' ? 'en' : 'zh')}
-      className="flex items-center space-x-2 h-10 px-4 rounded-xl bg-[var(--bg-primary)] border border-[var(--border-primary)] text-[var(--text-secondary)] hover:bg-[var(--brand-light)] hover:text-[var(--brand-primary)] hover:border-[var(--brand-primary)] transition-all duration-200 font-medium group active:scale-95"
+      className="flex items-center space-x-2 h-10 px-4 rounded-xl neumorphic-btn text-[var(--text-secondary)] hover:text-[var(--brand-primary)] font-medium group"
       title={locale === 'zh' ? 'Switch to English' : '切换到中文'}
     >
       <Languages size={16} className="group-hover:rotate-12 transition-transform" />

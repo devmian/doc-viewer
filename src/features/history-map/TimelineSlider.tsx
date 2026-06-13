@@ -12,11 +12,11 @@ interface DynastyRange {
 }
 
 const dynastyRanges: DynastyRange[] = [
-  { nameKey: 'type_dynasty_shang', startYear: -1600, endYear: -1047, color: '#4b5563', position: 0 },
+  { nameKey: 'type_dynasty_shang', startYear: -1600, endYear: -1047, color: '#6b7280', position: 0 },
   { nameKey: 'type_dynasty_zhou', startYear: -1046, endYear: -257, color: '#059669', position: 0 },
   { nameKey: 'type_spring_autumn', startYear: -770, endYear: -477, color: '#84cc16', position: 0 },
   { nameKey: 'type_warring_states', startYear: -475, endYear: -222, color: '#22c55e', position: 0 },
-  { nameKey: 'type_dynasty_qin', startYear: -221, endYear: -207, color: '#1f2937', position: -1 },
+  { nameKey: 'type_dynasty_qin', startYear: -221, endYear: -207, color: '#374151', position: -1 },
   { nameKey: 'type_dynasty_han', startYear: -202, endYear: 219, color: '#dc2626', position: 0 },
   { nameKey: 'type_three_kingdoms', startYear: 220, endYear: 279, color: '#f97316', position: -1 },
   { nameKey: 'type_dynasty_jin', startYear: 281, endYear: 419, color: '#14b8a6', position: 0 },
@@ -24,7 +24,7 @@ const dynastyRanges: DynastyRange[] = [
   { nameKey: 'type_dynasty_sui', startYear: 590, endYear: 617, color: '#06b6d4', position: -1 },
   { nameKey: 'type_dynasty_tang', startYear: 619, endYear: 906, color: '#f59e0b', position: 0 },
   { nameKey: 'type_five_dynasties', startYear: 908, endYear: 959, color: '#a855f7', position: -1 },
-  { nameKey: 'type_dynasty_song', startYear: 960, endYear: 1279, color: '#2563eb', position: 0 },
+  { nameKey: 'type_dynasty_song', startYear: 960, endYear: 1279, color: '#5b6ef5', position: 0 },
   { nameKey: 'type_dynasty_yuan', startYear: 1271, endYear: 1367, color: '#7c3aed', position: 0 },
   { nameKey: 'type_dynasty_ming', startYear: 1368, endYear: 1643, color: '#db2777', position: 0 },
   { nameKey: 'type_dynasty_qing', startYear: 1644, endYear: 1911, color: '#eab308', position: 0 },
@@ -104,7 +104,10 @@ const TimelineSlider: React.FC = () => {
 
   return (
     <div className="w-full">
-      <div className="w-full bg-gray-900/95 backdrop-blur-md rounded-lg shadow-lg border border-gray-700 p-2">
+      <div className="w-full p-2 rounded-xl" style={{
+        background: 'var(--bg-primary)',
+        boxShadow: 'var(--shadow-extruded)'
+      }}>
         
         {/* 顶部标签 */}
         <div className="relative h-10 mb-1">
@@ -124,17 +127,21 @@ const TimelineSlider: React.FC = () => {
                 <span 
                   className={`text-[10px] font-bold whitespace-nowrap transition-all px-1.5 py-0.5 rounded ${
                     isActive
-                      ? 'bg-white text-gray-900 ring-2 ring-white shadow-lg'
-                      : 'bg-gray-800/70 text-gray-400 group-hover:text-white group-hover:bg-gray-700'
+                      ? 'text-white font-bold' 
+                      : 'text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]'
                   }`}
+                  style={{
+                    background: isActive ? 'var(--brand-primary)' : 'var(--inset-bg)',
+                    boxShadow: isActive ? 'var(--shadow-extruded-sm)' : 'none'
+                  }}
                 >
                   {t(seg.nameKey)}
                 </span>
                 <div 
-                  className={`w-px transition-all ${isActive ? 'bg-white' : 'bg-gray-500 group-hover:bg-white'}`}
+                  className="w-px transition-all mt-0.5"
                   style={{
+                    backgroundColor: isActive ? 'var(--brand-primary)' : 'var(--border-primary)',
                     height: '6px',
-                    marginTop: '2px',
                     opacity: isActive ? 1 : 0.5
                   }}
                 />
@@ -145,7 +152,10 @@ const TimelineSlider: React.FC = () => {
 
         {/* 轨道 */}
         <div className="relative h-4 px-1">
-          <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-700 rounded-full transform -translate-y-1/2">
+          <div className="absolute top-1/2 left-0 right-0 h-1 rounded-full transform -translate-y-1/2" style={{
+            background: 'var(--inset-bg)',
+            boxShadow: 'var(--shadow-inset-sm)'
+          }}>
             {segments.map((seg, idx) => (
               <div
                 key={`bar-${idx}`}
@@ -159,7 +169,11 @@ const TimelineSlider: React.FC = () => {
                 }}
                 onClick={() => handleDynastyClick(seg)}
               >
-                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-1 py-0.5 bg-black/90 text-white text-[9px] rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap">
+                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-1 py-0.5 text-white text-[9px] rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap" style={{
+                  background: 'var(--bg-primary)',
+                  boxShadow: 'var(--shadow-extruded-sm)',
+                  color: 'var(--text-primary)'
+                }}>
                   {t(seg.nameKey)}: {formatYear(seg.startYear)}-{formatYear(seg.endYear)}
                 </div>
               </div>
@@ -168,11 +182,21 @@ const TimelineSlider: React.FC = () => {
 
           {/* 游标 */}
           <div 
-            className="absolute top-0 bottom-0 w-0.5 bg-white shadow-[0_0_6px_rgba(255,255,255,0.9)] pointer-events-none z-20"
-            style={{ left: `${yearToPercent(currentYear)}%` }}
+            className="absolute top-0 bottom-0 w-0.5 pointer-events-none z-20"
+            style={{
+              left: `${yearToPercent(currentYear)}%`,
+              backgroundColor: 'var(--brand-primary)',
+              boxShadow: '0 0 6px var(--brand-primary)'
+            }}
           >
-            <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-white rounded-full shadow border border-blue-500" />
-            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-white rounded-full shadow border border-blue-500" />
+            <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full shadow" style={{
+              backgroundColor: 'var(--brand-primary)',
+              border: '2px solid var(--bg-primary)'
+            }} />
+            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full shadow" style={{
+              backgroundColor: 'var(--brand-primary)',
+              border: '2px solid var(--bg-primary)'
+            }} />
           </div>
           
           <input
@@ -201,8 +225,9 @@ const TimelineSlider: React.FC = () => {
                 onClick={() => handleDynastyClick(seg)}
               >
                 <div 
-                  className={`w-px transition-all ${isActive ? 'bg-white' : 'bg-gray-500 group-hover:bg-white'}`}
+                  className="w-px transition-all"
                   style={{
+                    backgroundColor: isActive ? 'var(--brand-primary)' : 'var(--border-primary)',
                     height: '6px',
                     opacity: isActive ? 1 : 0.5
                   }}
@@ -210,9 +235,13 @@ const TimelineSlider: React.FC = () => {
                 <span 
                   className={`text-[10px] font-bold whitespace-nowrap transition-all px-1.5 py-0.5 rounded mt-0.5 ${
                     isActive
-                      ? 'bg-white text-gray-900 ring-2 ring-white shadow-lg'
-                      : 'bg-gray-800/70 text-gray-400 group-hover:text-white group-hover:bg-gray-700'
+                      ? 'text-white font-bold'
+                      : 'text-[var(--text-secondary)] group-hover:text-[var(--text-primary)]'
                   }`}
+                  style={{
+                    background: isActive ? 'var(--brand-primary)' : 'var(--inset-bg)',
+                    boxShadow: isActive ? 'var(--shadow-extruded-sm)' : 'none'
+                  }}
                 >
                   {t(seg.nameKey)}
                 </span>
@@ -222,19 +251,26 @@ const TimelineSlider: React.FC = () => {
         </div>
 
         {/* 底部控制 */}
-        <div className="flex items-center justify-between mt-1.5 pt-1.5 border-t border-gray-700/50">
+        <div className="flex items-center justify-between mt-1.5 pt-1.5 border-t border-[var(--border-primary)]">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-bold text-white font-mono">{formatYear(currentYear)}</span>
-            <span className="text-[9px] px-1.5 py-0.5 bg-gray-700/50 text-gray-400 rounded border border-gray-600">
+            <span className="text-sm font-bold font-mono text-[var(--text-primary)]">{formatYear(currentYear)}</span>
+            <span className="text-[9px] px-1.5 py-0.5 text-[var(--text-secondary)] rounded" style={{
+              background: 'var(--inset-bg)',
+              boxShadow: 'var(--shadow-inset-sm)'
+            }}>
               {t('history_map')}
             </span>
           </div>
           <button
-            className={`text-[10px] px-2 py-0.5 rounded transition-all font-medium ${
+            className={`text-[10px] px-2 py-0.5 rounded font-medium transition-all ${
               isPlaying 
-                ? 'bg-red-500/20 text-red-400 border border-red-500/30' 
-                : 'bg-blue-600 text-white hover:bg-blue-500'
+                ? 'text-red-400' 
+                : 'text-white'
             }`}
+            style={{
+              background: isPlaying ? 'var(--inset-bg)' : 'var(--brand-primary)',
+              boxShadow: isPlaying ? 'var(--shadow-inset-sm)' : 'var(--shadow-extruded-sm)'
+            }}
             onClick={handlePlay}
           >
             {isPlaying ? t('pause') : t('play')}

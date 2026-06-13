@@ -49,15 +49,15 @@ const DocTablePage: FC = () => {
   return (
     <div className="w-full max-w-screen-xl mx-auto py-10 px-4">
       <header className="mb-8 text-center">
-        <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-2">文档表格</h1>
+        <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-2 tracking-tight">文档表格</h1>
         <p className="text-[var(--text-secondary)]">共 {allItems.length} 个项目</p>
       </header>
 
-      <div className="bg-[var(--bg-secondary)] rounded-2xl border border-[var(--border-color)] overflow-hidden">
+      <div className="neumorphic-inset overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-[var(--border-color)]">
+              <tr className="border-b border-[var(--border-primary)]">
                 <th className="px-4 py-3 text-left text-sm font-semibold text-[var(--text-secondary)]">类型</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold text-[var(--text-secondary)]">名称</th>
                 <th className="px-4 py-3 text-left text-sm font-semibold text-[var(--text-secondary)]">路径</th>
@@ -68,7 +68,7 @@ const DocTablePage: FC = () => {
                 {allItems.map(item => (
                 <tr 
                   key={item.path} 
-                  className="border-b border-[var(--border-color)] hover:bg-[var(--bg-hover)] cursor-pointer"
+                  className="border-b border-[var(--border-primary)] hover:bg-[var(--bg-primary)] cursor-pointer transition-colors"
                   onClick={() => item.type === 'file' ? setLocation(`/${item.path.replace(/\.md$/, '')}`) : null}
                 >
                   <td className="px-4 py-3">

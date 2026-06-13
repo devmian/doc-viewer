@@ -20,7 +20,7 @@ export default function Breadcrumb({ path }: BreadcrumbProps) {
   ]
 
   return (
-    <nav className="flex items-center text-xs sm:text-sm text-[var(--text-secondary)] mb-8 bg-[var(--brand-light)]/30 px-4 py-2 rounded-full w-fit border border-[var(--border-primary)]/50">
+    <nav className="flex items-center text-xs sm:text-sm text-[var(--text-secondary)] mb-8 px-4 py-2 rounded-full w-fit neumorphic-breadcrumb">
       {breadcrumbs.map((crumb, index) => {
         const isLast = index === breadcrumbs.length - 1
         return (

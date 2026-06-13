@@ -49,18 +49,23 @@ export default function RecentDocs({ limit = 6 }: RecentDocsProps) {
   return (
     <div className="mb-8">
       <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4 flex items-center gap-2">
-        <Clock size={20} className="text-gray-400" />
+        <Clock size={20} className="text-[var(--text-secondary)]" />
         最近查看
       </h2>
-      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {recentDocs.slice(0, limit).map((doc, index) => (
           <Link
             key={doc.path}
             href={`/${doc.path}`}
-            className={`card block p-4 rounded-xl animate-fade-in-up stagger-${index + 1} opacity-0`}
+            className={`neumorphic-card p-4 animate-fade-in-up stagger-${index + 1} opacity-0`}
           >
             <div className="flex items-center gap-3">
-              <FileText className="w-5 h-5 text-gray-400" />
+              <div className="flex items-center justify-center w-9 h-9 rounded-lg" style={{
+                background: 'var(--inset-bg)',
+                boxShadow: 'var(--shadow-inset-sm)'
+              }}>
+                <FileText className="w-4 h-4 text-[var(--text-secondary)]" />
+              </div>
               <span className="text-[var(--text-primary)] text-sm font-medium truncate">
                 {doc.name}
               </span>

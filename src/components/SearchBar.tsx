@@ -18,7 +18,7 @@ export default function SearchBar({ onSearch, placeholder = '搜索文档...' }:
 
   return (
     <div className="relative">
-      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
+      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]">
         <Search size={18} />
       </span>
       <input
@@ -26,7 +26,7 @@ export default function SearchBar({ onSearch, placeholder = '搜索文档...' }:
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder={placeholder}
-        className="w-full pl-12 pr-4 py-3 rounded-xl text-sm bg-[var(--bg-secondary)] border border-[var(--border-primary)] text-[var(--text-primary)] placeholder:text-gray-400 focus:outline-none focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)]/20 transition-all"
+        className="w-full pl-12 pr-4 py-3 text-sm neumorphic-input"
       />
     </div>
   )

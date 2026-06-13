@@ -3,12 +3,9 @@ import { Link } from 'wouter'
 
 export default function HeroSection() {
   return (
-    <section className="relative mb-8 p-8 rounded-2xl overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-[var(--brand-primary)]/20 via-[var(--bg-primary)] to-[var(--brand-primary)]/10" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent" />
-      
+    <section className="relative mb-8 p-8 rounded-[20px] overflow-hidden neumorphic-card">
       <div className="relative z-10">
-        <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-3">
+        <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-3 tracking-tight">
           欢迎使用 Doc Viewer
         </h1>
         <p className="text-xl text-[var(--text-secondary)] mb-6 max-w-xl">
@@ -17,14 +14,14 @@ export default function HeroSection() {
         <div className="flex gap-4 flex-wrap">
           <Link
             href="/docs"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--brand-primary)] text-white rounded-xl font-medium hover:bg-[var(--brand-hover)] transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 text-white rounded-xl font-medium neumorphic-btn-primary"
           >
             <BookOpen size={18} />
             浏览文档
           </Link>
           <Link
             href="/table"
-            className="inline-flex items-center gap-2 px-6 py-3 glass rounded-xl font-medium text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium text-[var(--text-primary)] neumorphic-btn"
           >
             <Table size={18} />
             表格视图

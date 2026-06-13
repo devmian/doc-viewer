@@ -13,18 +13,21 @@ export default function DocCard({ name, path, type, title, className = '' }: Doc
   return (
     <Link
       href={type === 'directory' ? `/${path}` : `/${path.replace('.md', '')}`}
-      className={`card block p-4 rounded-xl ${className}`}
+      className={`neumorphic-card block p-5 ${className}`}
     >
       <div className="flex items-start gap-3">
-        <span className="text-2xl">
-          {type === 'directory' ? <Folder className="w-6 h-6 text-blue-500" /> : <FileText className="w-6 h-6 text-gray-400" />}
+        <span className="flex items-center justify-center w-10 h-10 rounded-xl" style={{
+          background: 'var(--inset-bg)',
+          boxShadow: 'var(--shadow-inset-sm)'
+        }}>
+          {type === 'directory' ? <Folder className="w-5 h-5" style={{ color: 'var(--brand-primary)' }} /> : <FileText className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />}
         </span>
         <div className="flex-1 min-w-0">
-          <div className={`font-medium truncate ${type === 'directory' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-900 dark:text-white'}`}>
+          <div className={`font-semibold truncate text-[var(--text-primary)]`}>
             {name}
           </div>
           {title && (
-            <div className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-1">
+            <div className="text-sm text-[var(--text-secondary)] mt-0.5 line-clamp-1">
               {title}
             </div>
           )}

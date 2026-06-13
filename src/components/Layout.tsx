@@ -22,7 +22,7 @@ export default function Layout({ children, tree, title }: LayoutProps) {
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 xl:hidden transition-opacity"
+          className="fixed inset-0 bg-black/30 z-40 xl:hidden transition-opacity"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -31,9 +31,9 @@ export default function Layout({ children, tree, title }: LayoutProps) {
       <div className={`fixed inset-y-0 left-0 z-50 w-72 transform transition-transform duration-300 ease-in-out xl:hidden ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
-        <div className="h-full bg-[var(--bg-secondary)] border-r border-[var(--border-primary)] shadow-2xl">
+        <div className="h-full bg-[var(--bg-primary)] border-r border-[var(--border-primary)]">
           <div className="flex justify-end p-4">
-            <button onClick={() => setSidebarOpen(false)} className="p-2 rounded-full hover:bg-[var(--brand-light)] text-[var(--text-secondary)]">
+            <button onClick={() => setSidebarOpen(false)} className="neumorphic-btn p-2 rounded-full text-[var(--text-secondary)]">
               <X size={20} />
             </button>
           </div>
@@ -43,7 +43,7 @@ export default function Layout({ children, tree, title }: LayoutProps) {
 
       {/* Desktop sidebar */}
       {sidebarDesktopOpen && (
-        <div className="hidden xl:block fixed inset-y-0 left-0 z-30 w-72 border-r border-[var(--border-primary)] bg-[var(--bg-secondary)]">
+        <div className="hidden xl:block fixed inset-y-0 left-0 z-30 w-72 border-r border-[var(--border-primary)] bg-[var(--bg-primary)] sidebar-neumorphic">
           <Sidebar tree={tree} />
         </div>
       )}
@@ -51,28 +51,28 @@ export default function Layout({ children, tree, title }: LayoutProps) {
       {/* Main content */}
       <div className={`flex flex-col min-h-screen ${sidebarDesktopOpen ? 'xl:pl-72' : ''}`}>
         {/* Header */}
-        <header className="sticky top-0 z-20 glass-header border-b border-[var(--border-primary)]">
+        <header className="sticky top-0 z-20 neumorphic-header">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() => setSidebarOpen(true)}
-                  className="p-2 rounded-xl text-[var(--text-secondary)] hover:bg-[var(--brand-light)] hover:text-[var(--brand-primary)] xl:hidden transition-all duration-200"
+                  className="p-2 rounded-xl text-[var(--text-secondary)] hover:text-[var(--brand-primary)] xl:hidden neumorphic-btn"
                   aria-label="Open menu"
                 >
                   <Menu size={22} />
                 </button>
                 <button
                   onClick={() => setSidebarDesktopOpen(!sidebarDesktopOpen)}
-                  className="hidden xl:flex p-2 rounded-xl text-[var(--text-secondary)] hover:bg-[var(--brand-light)] hover:text-[var(--brand-primary)] transition-all duration-200"
+                  className="hidden xl:flex p-2 rounded-xl text-[var(--text-secondary)] hover:text-[var(--brand-primary)] neumorphic-btn"
                   aria-label={sidebarDesktopOpen ? 'Hide sidebar' : 'Show sidebar'}
                 >
                   {sidebarDesktopOpen ? <PanelLeftClose size={22} /> : <PanelLeft size={22} />}
                 </button>
-                <Link href="/" className="p-2 rounded-xl text-[var(--text-secondary)] hover:bg-[var(--brand-light)] hover:text-[var(--brand-primary)] transition-all duration-200" aria-label="Go home">
+                <Link href="/" className="p-2 rounded-xl text-[var(--text-secondary)] hover:text-[var(--brand-primary)] neumorphic-btn" aria-label="Go home">
                   <Home size={22} />
                 </Link>
-                <Link href="/history" className="p-2 rounded-xl text-[var(--text-secondary)] hover:bg-[var(--brand-light)] hover:text-[var(--brand-primary)] transition-all duration-200" aria-label="History Map">
+                <Link href="/history" className="p-2 rounded-xl text-[var(--text-secondary)] hover:text-[var(--brand-primary)] neumorphic-btn" aria-label="History Map">
                   <Map size={22} />
                 </Link>
                 {title && (
@@ -91,7 +91,7 @@ export default function Layout({ children, tree, title }: LayoutProps) {
                 </div>
                 <button
                   onClick={() => setSearchOpen(!searchOpen)}
-                  className="p-2 rounded-xl text-[var(--text-secondary)] hover:bg-[var(--brand-light)] hover:text-[var(--brand-primary)] md:hidden transition-all duration-200"
+                  className="p-2 rounded-xl text-[var(--text-secondary)] hover:text-[var(--brand-primary)] md:hidden neumorphic-btn"
                   aria-label="Search documents"
                 >
                   <SearchIcon size={20} />
@@ -115,7 +115,7 @@ export default function Layout({ children, tree, title }: LayoutProps) {
         </main>
 
         {/* Footer */}
-        <footer className="mt-auto py-8 px-6 border-top border-[var(--border-primary)] text-center text-sm text-[var(--text-secondary)]">
+        <footer className="mt-auto py-8 px-6 border-t border-[var(--border-primary)] text-center text-sm text-[var(--text-secondary)]">
           <p>© {new Date().getFullYear()} LogicEngine Documentation</p>
         </footer>
       </div>

@@ -9,10 +9,10 @@ export default function SearchPage() {
   return (
     <div className="w-full max-w-screen-xl mx-auto py-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <header className="mb-12 max-w-2xl mx-auto text-center px-4">
-        <div className="inline-flex p-4 bg-[var(--brand-light)] text-[var(--brand-primary)] rounded-3xl mb-6 shadow-sm">
-          <FileSearch size={32} strokeWidth={2.5} />
+        <div className="inline-flex p-4 rounded-3xl mb-6 neumorphic-card items-center justify-center" style={{ width: '80px', height: '80px' }}>
+          <FileSearch size={32} strokeWidth={2.5} className="text-[var(--brand-primary)]" />
         </div>
-        <h1 className="text-4xl font-extrabold text-[var(--text-primary)] mb-4 tracking-tight">
+        <h1 className="text-4xl font-bold text-[var(--text-primary)] mb-4 tracking-tight">
           查找文档
         </h1>
         <p className="text-lg text-[var(--text-secondary)]">

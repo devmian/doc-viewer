@@ -65,7 +65,7 @@ export default function Home() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-gray-500">加载中...</div>
+        <div className="text-[var(--text-secondary)]">加载中...</div>
       </div>
     )
   }
@@ -91,7 +91,7 @@ export default function Home() {
       </div>
       
       {tree.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">
+        <div className="text-center py-12 text-[var(--text-secondary)]">
           <p className="text-lg">暂无文档</p>
           <p className="text-sm mt-2">在 docs/ 文件夹中添加 Markdown 文档即可显示</p>
         </div>
@@ -100,9 +100,10 @@ export default function Home() {
           <RecentDocs limit={6} />
           
           {sunburstData.children && sunburstData.children.length > 0 && (
-            <div className="mb-8 p-6 glass rounded-xl">
+            <div className="mb-8 p-6 neumorphic-card">
               <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4 flex items-center gap-2">
-                📊 文档概览
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--brand-primary)]"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 1 0 20 14.5 14.5 0 0 1 0-20"/><path d="M2 12h20"/></svg>
+                文档概览
               </h2>
               <div className="flex justify-center">
                 <SunburstChart 
@@ -122,9 +123,10 @@ export default function Home() {
           {allInRoot.length > 0 && (
             <div className="mb-8">
               <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4 flex items-center gap-2">
-                📁 目录
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--brand-primary)]"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2z"/></svg>
+                目录
               </h2>
-              <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {allInRoot.map((node, index) => (
                   <div key={node.relativePath} className={`animate-fade-in-up opacity-0 stagger-${Math.min(index + 1, 6)}`}>
                     <DocCard
@@ -142,9 +144,10 @@ export default function Home() {
           {files.length > 0 && (
             <div>
               <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-4 flex items-center gap-2">
-                📄 所有文档
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--brand-primary)]"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
+                所有文档
               </h2>
-              <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {files.map((node, index) => (
                   <div key={node.relativePath} className={`animate-fade-in-up opacity-0 stagger-${Math.min(index + 1, 6)}`}>
                     <DocCard

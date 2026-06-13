@@ -19,7 +19,7 @@ export default function Search({ onClose }: SearchProps) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="搜索文档..."
-          className="w-full px-4 py-2.5 pl-11 text-sm border border-[var(--border-primary)] rounded-2xl bg-[var(--bg-secondary)] text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)] focus:border-transparent transition-all duration-200 placeholder:text-[var(--text-secondary)] shadow-sm group-hover:shadow-md"
+          className="w-full px-4 py-2.5 pl-11 text-sm neumorphic-input"
           autoFocus
         />
         <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-secondary)] opacity-50 group-hover:opacity-100 transition-opacity">
@@ -28,7 +28,7 @@ export default function Search({ onClose }: SearchProps) {
       </div>
       
       {query && (
-        <div className="absolute top-full left-0 right-0 mt-3 z-50 border border-[var(--border-primary)] rounded-2xl bg-[var(--bg-secondary)] max-h-[32rem] overflow-y-auto shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute top-full left-0 right-0 mt-3 z-50 neumorphic-dropdown max-h-[32rem] overflow-y-auto">
           {loading ? (
             <div className="p-8 text-center space-y-3">
               <Loader2 size={24} className="mx-auto animate-spin text-[var(--brand-primary)]" />
@@ -52,7 +52,7 @@ export default function Search({ onClose }: SearchProps) {
                       className="flex items-start p-3 rounded-xl hover:bg-[var(--brand-light)] transition-all duration-200 group/item"
                       onClick={onClose}
                     >
-                      <div className="mt-1 p-2 bg-[var(--bg-primary)] rounded-lg text-[var(--brand-primary)] group-hover/item:bg-white transition-colors">
+                      <div className="mt-1 p-2 rounded-lg text-[var(--brand-primary)]" style={{ background: 'var(--inset-bg)', boxShadow: 'var(--shadow-inset-sm)' }}>
                         <FileText size={16} />
                       </div>
                       <div className="ml-3 flex-1 min-w-0">

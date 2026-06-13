@@ -3,32 +3,43 @@ description: Fundamental visual principles and design tokens for the Doc-Viewer 
 globs: ["src/**/*.tsx", "src/**/*.css", "index.html"]
 ---
 
-# Exaggerated Minimalism Design System
+# Neumorphism Design System
 
-The application follows a **"Exaggerated Minimalism"** design philosophy, prioritizing high contrast, broad spacing, and premium visual elements.
+The application follows a **Neumorphism (Soft UI)** design philosophy, utilizing dual-shadow extrusion effects, a monochromatic clay base, and subtle depth to create a tactile, physical-feeling interface.
 
-## 1. Visual Tokens (Slate/Blue Palette)
+## 1. Visual Tokens (Warm Clay Palette)
 
 | Token | Variable | Light Mode | Dark Mode |
 |-------|----------|------------|-----------|
-| Background Primary | `--bg-primary` | `#f8fafc` | `#020617` |
-| Background Secondary | `--bg-secondary` | `#ffffff` | `#0f172a` |
-| Text Primary | `--text-primary` | `#0f172a` | `#f8fafc` |
-| Text Secondary | `--text-secondary` | `#475569` | `#94a3b8` |
-| Border | `--border-primary` | `#e2e8f0` | `#1e293b` |
-| Brand | `--brand-primary` | `#2563eb` | `#3b82f6` |
+| Background | `--bg-primary` | `#e8ecf0` | `#1a1e24` |
+| Background (same) | `--bg-secondary` | `#e8ecf0` | `#1a1e24` |
+| Text Primary | `--text-primary` | `#2d3748` | `#e8ecf0` |
+| Text Secondary | `--text-secondary` | `#6b7280` | `#8892a4` |
+| Border | `--border-primary` | `#d1d9e6` | `#252a33` |
+| Brand | `--brand-primary` | `#5b6ef5` | `#7c8cf8` |
+| Inset BG | `--inset-bg` | `#d1d9e6` | `#12151a` |
 
-## 2. Typography
-- **Font Family**: `Plus Jakarta Sans` (Imported via Google Fonts).
+## 2. Neumorphism Shadows
+
+| Token | Usage | Light | Dark |
+|-------|-------|-------|------|
+| `--shadow-extruded` | Cards, buttons (resting) | `-6px -6px 12px rgba(255,255,255,0.8), 6px 6px 12px rgba(163,177,198,0.5)` | `-6px -6px 12px rgba(255,255,255,0.04), 6px 6px 12px rgba(0,0,0,0.5)` |
+| `--shadow-inset` | Inputs, pressed state | `inset 3px 3px 6px rgba(163,177,198,0.5), inset -3px -3px 6px rgba(255,255,255,0.8)` | `inset 3px 3px 6px rgba(0,0,0,0.5), inset -3px -3px 6px rgba(255,255,255,0.04)` |
+| `--shadow-extruded-lg` | Hover state | Same as extruded with 10px offset | Same as extruded with 10px offset |
+
+## 3. Typography
+- **Font Family**: `Inter` (Imported via Google Fonts).
 - **Line Height**: 1.6 - 1.75 for prose.
-- **Emphasis**: Use `font-extrabold` and `tracking-tight` for titles and major headers.
+- **Emphasis**: Use `font-semibold` or `font-bold` with `tracking-tight` for titles.
 
-## 3. Component Patterns
-- **Cards**: `rounded-2xl` or `rounded-3xl`. Use `border-[var(--border-primary)]` and `bg-[var(--bg-secondary)]`.
-- **Glassmorphism**: Headers must use `.glass-header` (`backdrop-filter: blur(8px)`).
-- **Icons**: Use `lucide-react` exclusively. Line width should be around `2.5` for emphasis. No emojis allowed in the core UI.
+## 4. Component Patterns
+- **Cards**: `rounded-[20px]` with `neumorphic-card` class. No borders. Use box-shadow for depth.
+- **Header**: Flat non-blur header with `neumorphic-header` class.
+- **Inputs**: Inset shadow with `neumorphic-input` class.
+- **Buttons**: Extruded resting → inset on press.
+- **Icons**: Use `lucide-react` exclusively. No emojis allowed in the core UI.
 
-## 4. Layout
+## 5. Layout
 - **Containers**: The main layout is broad (`max-w-none` or `w-full`).
-- **Prose**: Markdown content must be constrained to `max-w-800px` for optimal readability.
+- **Prose**: Markdown content constrained to `max-w-800px` for optimal readability.
 - **Grids**: Use `grid gap-6` or `gap-8` for spacing between data cards.

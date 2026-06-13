@@ -68,7 +68,7 @@ function TreeItem({ node, depth, searchTerm }: TreeItemProps) {
       href={`/${node.relativePath.replace(/\.md$/, '')}`}
       className={`relative flex items-center w-full px-4 py-2 text-sm rounded-xl transition-all duration-200 group sidebar-item-hover ${
         isActive 
-          ? 'bg-[var(--brand-light)] text-[var(--brand-primary)] font-semibold shadow-sm' 
+          ? 'sidebar-item-active' 
           : 'text-[var(--text-secondary)] hover:bg-[var(--brand-light)] hover:text-[var(--brand-primary)]'
       }`}
     >
@@ -91,7 +91,7 @@ export default function Sidebar({ tree }: SidebarProps) {
   }, [tree, searchTerm])
   
   return (
-    <div className="flex flex-col h-full py-6 bg-[var(--bg-secondary)] sidebar-glass">
+    <div className="flex flex-col h-full py-6 bg-[var(--bg-primary)]">
       {/* Header */}
       <div className="px-5 mb-6">
         <Link 

@@ -80,7 +80,7 @@ export default function TableOfContents({ content }: { content: string }) {
     <div ref={menuRef} className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-primary)] text-[var(--text-primary)] shadow-lg hover:shadow-xl hover:border-[var(--brand-primary)] hover:text-[var(--brand-primary)] transition-all duration-300"
+        className="flex items-center gap-2 px-4 py-2.5 rounded-xl neumorphic-toc-btn text-[var(--text-primary)] hover:text-[var(--brand-primary)]"
         title="Table of Contents"
       >
         <List size={18} strokeWidth={2.5} />
@@ -88,8 +88,8 @@ export default function TableOfContents({ content }: { content: string }) {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-72 max-h-[60vh] overflow-y-auto bg-[var(--bg-secondary)] border border-[var(--border-primary)] rounded-xl shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200 z-50">
-          <div className="sticky top-0 z-10 flex items-center justify-between p-3 border-b border-[var(--border-primary)] bg-[var(--bg-secondary)]">
+        <div className="absolute right-0 top-full mt-2 w-72 max-h-[60vh] overflow-y-auto neumorphic-dropdown z-50">
+          <div className="sticky top-0 z-10 flex items-center justify-between p-3 border-b border-[var(--border-primary)]" style={{ background: 'var(--bg-primary)' }}>
             <span className="text-xs font-bold uppercase tracking-widest text-[var(--text-secondary)]">On this page</span>
           </div>
           <nav className="p-2">
@@ -105,7 +105,7 @@ export default function TableOfContents({ content }: { content: string }) {
                       : 'text-[var(--text-secondary)] ml-6 text-xs'
                   }
                   ${activeId === heading.id 
-                    ? 'bg-[var(--brand-light)] text-[var(--brand-primary)]' 
+                    ? 'sidebar-item-active' 
                     : 'hover:bg-[var(--brand-light)] hover:text-[var(--brand-primary)]'
                   }
                 `}
